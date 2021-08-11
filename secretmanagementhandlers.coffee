@@ -1,122 +1,56 @@
 ############################################################
 scihandlers.addNodeId = (publicKey, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "ok": true
-}
+    secretStore.addNodeId(publicKey)
+    return {ok:true}
 
-    ###
-    return result
 
 
 ############################################################
 scihandlers.getSecretSpace = (publicKey, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "referencePoint": "...",
-    "encryptedContent": "..."
-}
-
-    ###
-    return result
+    encryptedSpace = await secretHandler.getEncryptedSecretSpace(publicKey)
+    return encryptedSpace
 
 
 ############################################################
 scihandlers.getSecret = (publicKey, secretId, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "referencePoint": "...",
-    "encryptedContent": "..."
-}
-
-    ###
-    return result
+    secret = secretStore.getSecret(publicKey, secretId)
+    return secret
 
 
 ############################################################
 scihandlers.setSecret = (publicKey, secretId, secret, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "ok": true
-}
-
-    ###
-    return result
+    await secretHandler.setSecret(publicKey, secretId, secret)
+    return {ok:true}
 
 
 ############################################################
 scihandlers.deleteSecret = (publicKey, secretId, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "ok": true
-}
-
-    ###
-    return result
+    secretStore.deleteSecret(publicKey, secretId)
+    return {ok:true}
 
 
 ############################################################
 scihandlers.startAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "ok": true
-}
-
-    ###
-    return result
+    await secretStore.addSubSpaceFor(publicKey, fromId)
+    return {ok:true}
 
 
 ############################################################
 scihandlers.stopAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "ok": true
-}
-
-
-    ###
-    return result
+    await secretStore.removeSubSpaceFor(publicKey, fromId)
+    return {ok:true}
 
 
 ############################################################
 scihandlers.shareSecretTo = (publicKey, shareToId, secretId, secret, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "ok": true
-}
-
-    ###
-    return result
+    await secretHandler.shareSecretTo(publicKey, shareToId, secretId, secret)
+    return {ok:true}
 
 
 ############################################################
 scihandlers.deleteSharedSecret = (publicKey, sharedToId, secretId, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "ok": true
-}
-
-
-    ###
-    return result
+    secretStore.deleteSharedSecret(sharedToId, publicKey, secretId)
+    return {ok:true}
 
 
 ############################################################
