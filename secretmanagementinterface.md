@@ -1,3 +1,4 @@
+[![hackmd-github-sync-badge](https://hackmd.io/EtJSEnxjTVOOvRJdWGJlYw/badge)](https://hackmd.io/EtJSEnxjTVOOvRJdWGJlYw)
 ###### tags: `documentation` `sci`
 
 # [secretmanagementinterface](https://github.com/JhonnyJason/secretmanagementinterface) v0.3
