@@ -1,91 +1,72 @@
-secretmanagementinterface = {}
+import { postData } from "thingy-network-base"
 
 ############################################################
-secretmanagementinterface.addNodeId = (publicKey, timestamp, signature) ->
+export addNodeId = (sciURL, publicKey, timestamp, signature) ->
     requestObject = { publicKey, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/addNodeId"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/addNodeId"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.getSecretSpace = (publicKey, timestamp, signature) ->
+export getSecretSpace = (sciURL, publicKey, timestamp, signature) ->
     requestObject = { publicKey, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/getSecretSpace"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/getSecretSpace"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.getSecret = (publicKey, secretId, timestamp, signature) ->
+export getSecret = (sciURL, publicKey, secretId, timestamp, signature) ->
     requestObject = { publicKey, secretId, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/getSecret"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/getSecret"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.setSecret = (publicKey, secretId, secret, timestamp, signature) ->
+export setSecret = (sciURL, publicKey, secretId, secret, timestamp, signature) ->
     requestObject = { publicKey, secretId, secret, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/setSecret"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/setSecret"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.deleteSecret = (publicKey, secretId, timestamp, signature) ->
+export deleteSecret = (sciURL, publicKey, secretId, timestamp, signature) ->
     requestObject = { publicKey, secretId, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/deleteSecret"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/deleteSecret"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.startAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
+export startAcceptingSecretsFrom = (sciURL, publicKey, fromId, timestamp, signature) ->
     requestObject = { publicKey, fromId, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/startAcceptingSecretsFrom"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/startAcceptingSecretsFrom"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.stopAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
+export stopAcceptingSecretsFrom = (sciURL, publicKey, fromId, timestamp, signature) ->
     requestObject = { publicKey, fromId, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/stopAcceptingSecretsFrom"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/stopAcceptingSecretsFrom"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.shareSecretTo = (publicKey, shareToId, secretId, secret, timestamp, signature) ->
+export shareSecretTo = (sciURL, publicKey, shareToId, secretId, secret, timestamp, signature) ->
     requestObject = { publicKey, shareToId, secretId, secret, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/shareSecretTo"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/shareSecretTo"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.deleteSharedSecret = (publicKey, sharedToId, secretId, timestamp, signature) ->
+export deleteSharedSecret = (sciURL, publicKey, sharedToId, secretId, timestamp, signature) ->
     requestObject = { publicKey, sharedToId, secretId, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/deleteSharedSecret"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/deleteSharedSecret"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.addSyncHook = (publicKey, secretId, serverURL, timestamp, signature) ->
+export addSyncHook = (sciURL, publicKey, secretId, serverURL, timestamp, signature) ->
     requestObject = { publicKey, secretId, serverURL, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/addSyncHook"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/addSyncHook"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.addNotificationHook = (publicKey, type, specific, timestamp, signature) ->
+export addNotificationHook = (sciURL, publicKey, type, specific, timestamp, signature) ->
     requestObject = { publicKey, type, specific, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/addNotificationHook"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/addNotificationHook"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.getAuthCode = (publicKey, timestamp, signature) ->
+export getAuthCode = (sciURL, publicKey, timestamp, signature) ->
     requestObject = { publicKey, timestamp, signature }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/getAuthCode"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/getAuthCode"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.addFriendServer = (authCode, serverURL, serverNodeId) ->
+export addFriendServer = (sciURL, authCode, serverURL, serverNodeId) ->
     requestObject = { authCode, serverURL, serverNodeId }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/addFriendServer"
-    return @postData(requestURL, requestObject)
+    requestURL = sciURL+"/addFriendServer"
+    return postData(requestURL, requestObject)
 
-secretmanagementinterface.getNodeId = (authCode) ->
+export getNodeId = (sciURL, authCode) ->
     requestObject = { authCode }
-    interfaceServers = allModules.configmodule.interfaceServers
-    requestURL = interfaceServers["secretmanagementinterface"]+"/getNodeId"
-    return @postData(requestURL, requestObject)
-
-#endregion
-
-    
-module.exports = secretmanagementinterface
+    requestURL = sciURL+"/getNodeId"
+    return postData(requestURL, requestObject)
