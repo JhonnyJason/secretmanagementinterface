@@ -1,5 +1,3 @@
-import { postData } from "thingy-network-base"
-
 ############################################################
 export addNodeId = (sciURL, publicKey, timestamp, signature) ->
     requestObject = { publicKey, timestamp, signature }
