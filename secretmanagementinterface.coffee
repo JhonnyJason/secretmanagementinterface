@@ -4,6 +4,11 @@ export addNodeId = (sciURL, publicKey, timestamp, signature) ->
     requestURL = sciURL+"/addNodeId"
     return postData(requestURL, requestObject)
 
+export removeNodeId = (sciURL, publicKey, timestamp, signature) ->
+    requestObject = { publicKey, timestamp, signature }
+    requestURL = sciURL+"/removeNodeId"
+    return postData(requestURL, requestObject)
+
 export getSecretSpace = (sciURL, publicKey, timestamp, signature) ->
     requestObject = { publicKey, timestamp, signature }
     requestURL = sciURL+"/getSecretSpace"

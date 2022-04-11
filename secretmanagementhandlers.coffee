@@ -1,60 +1,65 @@
 ############################################################
-scihandlers.addNodeId = (publicKey, timestamp, signature) ->
+export addNodeId = (publicKey, timestamp, signature) ->
     secretStore.addNodeId(publicKey)
+    return {ok:true}
+    
+
+############################################################
+export removeNodeId = (publicKey, timestamp, signature) ->
+    secretStore.removeNodeId(publicKey)
     return {ok:true}
 
 
-
 ############################################################
-scihandlers.getSecretSpace = (publicKey, timestamp, signature) ->
+export getSecretSpace = (publicKey, timestamp, signature) ->
     encryptedSpace = await secretHandler.getEncryptedSecretSpace(publicKey)
     return encryptedSpace
 
 
 ############################################################
-scihandlers.getSecret = (publicKey, secretId, timestamp, signature) ->
+export getSecret = (publicKey, secretId, timestamp, signature) ->
     secret = secretStore.getSecret(publicKey, secretId)
     return secret
 
 
 ############################################################
-scihandlers.setSecret = (publicKey, secretId, secret, timestamp, signature) ->
+export setSecret = (publicKey, secretId, secret, timestamp, signature) ->
     await secretHandler.setSecret(publicKey, secretId, secret)
     return {ok:true}
 
 
 ############################################################
-scihandlers.deleteSecret = (publicKey, secretId, timestamp, signature) ->
+export deleteSecret = (publicKey, secretId, timestamp, signature) ->
     secretStore.deleteSecret(publicKey, secretId)
     return {ok:true}
 
 
 ############################################################
-scihandlers.startAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
+export startAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
     await secretStore.addSubSpaceFor(publicKey, fromId)
     return {ok:true}
 
 
 ############################################################
-scihandlers.stopAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
+export stopAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
     await secretStore.removeSubSpaceFor(publicKey, fromId)
     return {ok:true}
 
 
 ############################################################
-scihandlers.shareSecretTo = (publicKey, shareToId, secretId, secret, timestamp, signature) ->
+export shareSecretTo = (publicKey, shareToId, secretId, secret, timestamp, signature) ->
     await secretHandler.shareSecretTo(publicKey, shareToId, secretId, secret)
     return {ok:true}
 
 
 ############################################################
-scihandlers.deleteSharedSecret = (publicKey, sharedToId, secretId, timestamp, signature) ->
+export deleteSharedSecret = (publicKey, sharedToId, secretId, timestamp, signature) ->
     secretStore.deleteSharedSecret(sharedToId, publicKey, secretId)
     return {ok:true}
 
 
 ############################################################
-scihandlers.addSyncHook = (publicKey, secretId, serverURL, timestamp, signature) ->
+export addSyncHook = (publicKey, secretId, serverURL, timestamp, signature) ->
     result = {}
     ###
     
@@ -68,7 +73,7 @@ scihandlers.addSyncHook = (publicKey, secretId, serverURL, timestamp, signature)
 
 
 ############################################################
-scihandlers.addNotificationHook = (publicKey, type, specific, timestamp, signature) ->
+export addNotificationHook = (publicKey, type, specific, timestamp, signature) ->
     result = {}
     ###
     
@@ -82,7 +87,7 @@ scihandlers.addNotificationHook = (publicKey, type, specific, timestamp, signatu
 
 
 ############################################################
-scihandlers.getAuthCode = (publicKey, timestamp, signature) ->
+export getAuthCode = (publicKey, timestamp, signature) ->
     result = {}
     ###
     
@@ -95,7 +100,7 @@ scihandlers.getAuthCode = (publicKey, timestamp, signature) ->
 
 
 ############################################################
-scihandlers.addFriendServer = (authCode, serverURL, serverNodeId) ->
+export addFriendServer = (authCode, serverURL, serverNodeId) ->
     result = {}
     ###
     
@@ -109,7 +114,7 @@ scihandlers.addFriendServer = (authCode, serverURL, serverNodeId) ->
 
 
 ############################################################
-scihandlers.getNodeId = (authCode) ->
+export getNodeId = (authCode) ->
     result = {}
     ###
     

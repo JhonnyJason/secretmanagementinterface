@@ -1,5 +1,5 @@
 ############################################################
-sciroutes.addNodeId = (req, res) ->
+export addNodeId = (req, res) ->
     try
         response = await h.addNodeId(req.body.publicKey, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -7,7 +7,15 @@ sciroutes.addNodeId = (req, res) ->
     return
 
 ############################################################
-sciroutes.getSecretSpace = (req, res) ->
+export removeNodeId = (req, res) ->
+    try
+        response = await h.removeNodeId(req.body.publicKey, req.body.timestamp, req.body.signature)
+        res.send(response)
+    catch err then res.send({error: err.stack})
+    return
+
+############################################################
+export getSecretSpace = (req, res) ->
     try
         response = await h.getSecretSpace(req.body.publicKey, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -15,7 +23,7 @@ sciroutes.getSecretSpace = (req, res) ->
     return
 
 ############################################################
-sciroutes.getSecret = (req, res) ->
+export getSecret = (req, res) ->
     try
         response = await h.getSecret(req.body.publicKey, req.body.secretId, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -23,7 +31,7 @@ sciroutes.getSecret = (req, res) ->
     return
 
 ############################################################
-sciroutes.setSecret = (req, res) ->
+export setSecret = (req, res) ->
     try
         response = await h.setSecret(req.body.publicKey, req.body.secretId, req.body.secret, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -31,7 +39,7 @@ sciroutes.setSecret = (req, res) ->
     return
 
 ############################################################
-sciroutes.deleteSecret = (req, res) ->
+export deleteSecret = (req, res) ->
     try
         response = await h.deleteSecret(req.body.publicKey, req.body.secretId, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -39,7 +47,7 @@ sciroutes.deleteSecret = (req, res) ->
     return
 
 ############################################################
-sciroutes.startAcceptingSecretsFrom = (req, res) ->
+export startAcceptingSecretsFrom = (req, res) ->
     try
         response = await h.startAcceptingSecretsFrom(req.body.publicKey, req.body.fromId, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -47,7 +55,7 @@ sciroutes.startAcceptingSecretsFrom = (req, res) ->
     return
 
 ############################################################
-sciroutes.stopAcceptingSecretsFrom = (req, res) ->
+export stopAcceptingSecretsFrom = (req, res) ->
     try
         response = await h.stopAcceptingSecretsFrom(req.body.publicKey, req.body.fromId, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -55,7 +63,7 @@ sciroutes.stopAcceptingSecretsFrom = (req, res) ->
     return
 
 ############################################################
-sciroutes.shareSecretTo = (req, res) ->
+export shareSecretTo = (req, res) ->
     try
         response = await h.shareSecretTo(req.body.publicKey, req.body.shareToId, req.body.secretId, req.body.secret, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -63,7 +71,7 @@ sciroutes.shareSecretTo = (req, res) ->
     return
 
 ############################################################
-sciroutes.deleteSharedSecret = (req, res) ->
+export deleteSharedSecret = (req, res) ->
     try
         response = await h.deleteSharedSecret(req.body.publicKey, req.body.sharedToId, req.body.secretId, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -71,7 +79,7 @@ sciroutes.deleteSharedSecret = (req, res) ->
     return
 
 ############################################################
-sciroutes.addSyncHook = (req, res) ->
+export addSyncHook = (req, res) ->
     try
         response = await h.addSyncHook(req.body.publicKey, req.body.secretId, req.body.serverURL, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -79,7 +87,7 @@ sciroutes.addSyncHook = (req, res) ->
     return
 
 ############################################################
-sciroutes.addNotificationHook = (req, res) ->
+export addNotificationHook = (req, res) ->
     try
         response = await h.addNotificationHook(req.body.publicKey, req.body.type, req.body.specific, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -87,7 +95,7 @@ sciroutes.addNotificationHook = (req, res) ->
     return
 
 ############################################################
-sciroutes.getAuthCode = (req, res) ->
+export getAuthCode = (req, res) ->
     try
         response = await h.getAuthCode(req.body.publicKey, req.body.timestamp, req.body.signature)
         res.send(response)
@@ -95,7 +103,7 @@ sciroutes.getAuthCode = (req, res) ->
     return
 
 ############################################################
-sciroutes.addFriendServer = (req, res) ->
+export addFriendServer = (req, res) ->
     try
         response = await h.addFriendServer(req.body.authCode, req.body.serverURL, req.body.serverNodeId)
         res.send(response)
@@ -103,7 +111,7 @@ sciroutes.addFriendServer = (req, res) ->
     return
 
 ############################################################
-sciroutes.getNodeId = (req, res) ->
+export getNodeId = (req, res) ->
     try
         response = await h.getNodeId(req.body.authCode)
         res.send(response)
