@@ -1,161 +1,309 @@
-###### tags: `documentation` `design`
+[![hackmd-github-sync-badge](https://hackmd.io/EtJSEnxjTVOOvRJdWGJlYw/badge)](https://hackmd.io/EtJSEnxjTVOOvRJdWGJlYw)
+###### tags: `documentation` `sci`
 
-# Secret Management
+# [secretmanagementinterface](https://github.com/JhonnyJason/secretmanagementinterface) v0.3
 
-What we want and need:
----
 
-- [x] Central lightweight service (on our own servers!) to safely store our secrets - the `secretManager`
-- [x] The `secretManager` shall not know our secrets - especially not have them being arbitrarily readable
-- [x] Only when knowing the `privateKey` one may request a nodes' secrets
-- [x] Only when knowing the `privateKey` one may read a nodes' secrets
-- [x] Only when knowing the `privateKey` one may have the authority to manipulate a nodes' secrets
-- [x] A node may share any secrets with another node
-- [x] A node may decide if it accepts secrets form another node
-- [x] The possibility to create a self-destructing temporary node
-- [ ] Loggin activities of the keys - accessible only with the `privateKey`
-- [ ] Decentralitation/Resilience - reduntant Servers running to ensure availabilty
-- [ ] Federation - communication with alien Servers
+### /addNodeId
+If there is no `secretSpace` for this `nodeId` it creates an empty object as its `secretSpace`.
+If there is a `dateOfDeath` defined this `nodeId` is temporary and will be deleted at the specified date.
+Also if we have a `dateOfDeath` defined and a `secretSpace` already exists for this `nodeId` we will cause an error.
 
-What we ultimately want is to replace oldschool account management (username/email/password) with this rather anonymous SecretsManagement.
-The thought Applications of the future shall not have to deal with accounts - having their username passwords etc. stored in their own Database.
-The Application simply shall not care about who is requesting what. 
+All of this will only work having a valid `authCode`. This way we could limit the creation of `secretSpaces` to Users we trust and want to have using our servers.
 
-So we decouple Accounts from Applications - as same as UI from Services.
-The general Vision in the background looks something like this:
-
-- Choose or build/optimize your own UIs
-- Choose or build/optimize your own Services
-- Decide which UI shall use which Services
-- Use your secrets seemlessly across any of those UIs and Services
-- Avoid overcomplicated OAuth and the dependency on Google, Github, Facbook and the likes
-
-## The Basic Behaviour
-
-Any PWA(=UI) or Service or other thingy (e.G CLI) in general is regarded simply as a node. For any new node a keypair is generated the `publicKey` which we also call `nodeId`. (For the sake of simplicity we use ed25519-keys)
-
-From the perspective of the secret Manager this `nodeId` has its own unique `secretSpace` where all secrets for this node are stored.
-Every secret stored is encrypted by using the nodes' `publicKey` in such a way only the node may decrypt the secret again.
-
-- node creation -> (publicKey, privateKey)
-- notify secretManager of existence -> send publicKey to secretManager -> creates secretSpace
-- store secret -> encrypt(secret) -> send to secretManager -> verify authority -> encrypt(receivedSecret) -> store in relevant secretSpace
-- retrieve secret -> request secretManager for secret -> verify authority -> send back encryptedSecret from secreSpace -> decrypt(encryptedSecret)
-
-![](https://hackmd.io/_uploads/r1_tKYRPY.jpg)
-
-## The SecretSpace
-The `secretSpace` is just a JS object with keys and their content. Were we distinguish 2 kinds of secrets.
-
-### Native Secret
-Here the key is the secrets' `secretId` ("allmightySecret").
+#### request
 ```json
 {
-    "allmightySecret": {
-        "secret": {referencePoint, encryptedContent}
-    }
+    "authCode": "",
+    "publicKey": "",
+    "dateOfDeath": "",
+    "timestamp": "",
+    "signature": ""
 }
 ```
-### Shared Secret
-Here the first key is the `fromId` (the `nodeId` from whom we got the secret from). Its content is merely the sub-space for `fromId` where this node could set secrets for us. Inside this sub-space Object we have the specific secret by its `secretId` ("allmightySecret").
-
+#### response
 ```json
 {
-    "9a16ce79c30b3b6b11b9c28e33e64e0d5d270cffebaf12d4c878552ddb2634e5": {
-        "allmightySecret": {referencePoint, encryptedContent}
-    }
-}    
+    "ok": true
+}
 ```
 
-### The SecretId
-As the `secretId` is not directly subject to any encryption, so it might be advisable to not disclose too much information there and rather use the hash of a human readable identifier for its value.
+### /removeNodeId
+This will remove the certain NodeId with all its `secretSpace` and sub-spaces.
 
-For now this is not implicitely being done.
+#### request
+```json
+{
+    "publicKey": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
+```
 
-## Secret Sharing
-For our `secretSpace` labeled with our `nodeId` only we have the authority to write anything.
+### /getSecretSpace
+Returns the encrypted version of the whole `secretSpace`.
+#### request
+```json
+{
+    "publicKey": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "referencePoint": "...",
+    "encryptedContent": "..."
+}
+```
 
-![](https://hackmd.io/_uploads/B1U_tYRwF.jpg)
+### /getSecret
+Returns the encrypted secret of the given `secretId`.
 
-### Accepting Secrets From Another Node
-If we want to allow another node to share secrets to us we first need to create a sub-space labeled as their `nodeId`. This `nodeId` we also call `fromId` in this context.
+#### request
+```json
+{
+    "publicKey": "",
+    "secretId": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "referencePoint": "...",
+    "encryptedContent": "..."
+}
+```
 
-Now within that sub-space the `fromId` has the authority to store secrets for us. Also those secrets would be asymetrically encrypted using our `publicKey`.
+### /setSecret
+Encryptes the given `secret` and stores it at `secretId` within the owners' `secretSpace`.
 
-### Writing Shared Secrets
-Now the other `nodeId` could decide at any time to write, overwrite and delete any secrets within this sub-space.
-Our node would be the only one who could decrypt it using it's own `privateKey`.
+It still is recommended to also encrypt the secret beforen sending it. (As we should not completely trust SSL using CAs.)
 
-### Stop Accepting Secrets
-At anytime we could stop accepting secrets from this `nodeId`. Then we would simply delete this sub-space and all secrets therein would be immediately lost. 
+#### request
+```json
+{
+    "publicKey": "",
+    "secretId": "",
+    "secret": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
+```
 
-## Signature
-To verify validity of every request we use ed25519 signatures.
-Every request must come from a node with it's `publicKey` which directly defines the full scope of authority. Thus the one signature on the request is the only thing required for authentication.
+### /deleteSecret
+Deletes the given `secretId` from the `secretSpace`.
 
-To mitigate most brutish replay attacks we also use the specific SCI-endpoint and a timestamp witin the signed content.
-Also we store the latest signatures used for the time while the timestamp is valid, so not even a fast replay attack is possible. This is necessary because the we have a timeframe of validity of the timestamp which is greater than 0.
-
----
-
-## Decentralitation/Resilience - reduntant Servers running to ensure availabilty
-- Redundancy of Running service
-- Load Balancing
-- Redundancy of Data Storage
-
-//TODO: research
-
-## Federation - communication with alien Servers
-//TODO: research
-
-## Logging activities of the Keys
-This is important for breach detection.
-Important is to save the logs in a different context in such a way that it is accessible independently of potentially breached keys.
-
-Nice: When having full logs we donot need really any backup as in case of a breach the logs would enable us to reproduce the latest uncorrupted state. 
+#### request
+```json
+{
+    "publicKey": "",
+    "secretId": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
+```
 
 
----
+### /startAcceptingSecretsFrom
+Now we will create the empty Object for a foreign subSpace which goes by the key `fromId` within our `secretSpace`.
+Only now the `fromId` may write secrets into this foreign subSpace.
+#### request
+```json
+{
+    "publicKey": "",
+    "fromId": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
+```
 
-## Secret Manager Service
-Central part of this is the [secret-manager-service](https://github.com/JhonnyJason/secret-manager-service).
-It provides this SCI to savely store these secrets for these nodes.
+### /stopAcceptingSecretsFrom
+This will remove the Object which goes by the key `fromId` within our `secretSpace`.
+All shared secrets in there are lost. And the `fromId` could not provide any secrets for us.
+#### request
+```json
+{
+    "publicKey": "",
+    "fromId": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
 
-Anyone is encouraged to check out the code and run their own secretManager. While my first one is also one publicly accessible at https://secrets.extensivlyon.coffee
+```
 
-It is important to notice that this service could be easily DDOSed. As for every request it would at least verify a signature in pure JS.
+### /shareSecretTo
+This will write the secret into the sub-space of the `shareToId` if it exists.
+*Note this `shareToId` may also be given in the way of `servername.domain.tld:shareToId`.*
 
-## Crypto Utils
+#### request
+```json
+{
+    "publicKey": "",
+    "shareToId": "",
+    "secretId": "",
+    "secret": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
+```
 
-There is the [secret-manager-crypto-utils](https://www.npmjs.com/package/secret-manager-crypto-utils) package available. This includes all relavant crypto primitives.
-If you want to check out the code and the algorithms [this](https://github.com/JhonnyJason/secret-manager-crypto-utils-sources/tree/master/source) would be the place where to start.
+### /deleteSharedSecret
+This will delete the specified `secretId` if it exists in the available subs-space of the `sharedToId`.
 
-## Secret Manager Client
+#### request
+```json
+{
+    "publicKey": "",
+    "sharedToId": "",
+    "secretId": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
 
-There is the [secret-manager-client](https://www.npmjs.com/package/secret-manager-client) package available which implements the full client-side of the secretManager SCI.
+```
 
-This serves the purpose to be used in  the applications if it is in the browser, as a NodeJS service or NodejS CLI which needs the secretManager.
-If you are interested in the code go [here](https://github.com/JhonnyJason/secret-manager-client-sources/tree/master/source)
+### /addSyncHook
+Whenever a `/setSecret` for the specific `secretId` is called it would also send the same request to the SecretManager at the specified `serverURL`. 
+*Note: This `serverURL` must be known to the SecretManager!*
 
-## Secret Cockpit
-There is a tool available to analyse secrets of your nodes and manage them in hopefully the most flexible way.
+#### request
+```json
+{
+    "publicKey": "",
+    "secretId": "",
+    "serverURL": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
 
-- [Live Tool Online](https://secrets-cockpit.extensivlyon.coffee)
-- [Documentation](https://hackmd.io/wPTUeTzwQ3q9uXhuKHf3Cg?view)
-- [The Code](https://github.com/JhonnyJason/secret-cockpit)
+```
 
----
+### /addNotificationHook
+ TODO: define
+ 
+#### request
+```json
+{
+    "publicKey": "",
+    "type": "",
+    "specific": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
 
-## [From Interface Specification:](https://hackmd.io/EtJSEnxjTVOOvRJdWGJlYw?view)
+```
 
----
+### /getAuthCode
+This request lets the server share the current authCode to the requestors `secretSpace`.
+*Note: we need to accept secrets from the SecretManager first!*
 
-{%hackmd EtJSEnxjTVOOvRJdWGJlYw %}
+#### request
+```json
+{
+    "publicKey": "",
+    "timestamp": "",
+    "signature": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
+```
 
----
+### /addFriendServer
+This request lets us add another server to which the SecretManager would speak to.
 
-## [From Specification Testing:](https://hackmd.io/vUaiSwD3TRyKRURPEnyQSw?view)
+#### request
+```json
+{
+    "authCode": "",
+    "serverURL": "",
+    "serverNodeId": ""
+}
+```
+#### response
+```json
+{
+    "ok": true
+}
 
----
+```
 
-{%hackmd vUaiSwD3TRyKRURPEnyQSw %}
+### /getNodeId
+Returns the `nodeId` of the SecretManager.
+
+#### request
+```json
+{
+    "authCode": ""
+}
+```
+#### response
+```json
+{
+    "publicKey": "...",
+    "timestamp": "...",
+    "signature": "..."
+}
+```
+
