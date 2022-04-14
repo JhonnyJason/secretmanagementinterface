@@ -1,3 +1,5 @@
+import { postData } from "thingy-network-base"
+
 ############################################################
 export addNodeId = (sciURL, publicKey, timestamp, signature) ->
     requestObject = { publicKey, timestamp, signature }
@@ -47,11 +49,6 @@ export shareSecretTo = (sciURL, publicKey, shareToId, secretId, secret, timestam
 export deleteSharedSecret = (sciURL, publicKey, sharedToId, secretId, timestamp, signature) ->
     requestObject = { publicKey, sharedToId, secretId, timestamp, signature }
     requestURL = sciURL+"/deleteSharedSecret"
-    return postData(requestURL, requestObject)
-
-export addSyncHook = (sciURL, publicKey, secretId, serverURL, timestamp, signature) ->
-    requestObject = { publicKey, secretId, serverURL, timestamp, signature }
-    requestURL = sciURL+"/addSyncHook"
     return postData(requestURL, requestObject)
 
 export addNotificationHook = (sciURL, publicKey, type, specific, timestamp, signature) ->

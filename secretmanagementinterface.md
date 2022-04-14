@@ -207,21 +207,6 @@ This will delete the specified `secretId` if it exists in the available subs-spa
 }
 
 ```
-
-### /addSyncHook
-Whenever a `/setSecret` for the specific `secretId` is called it would also send the same request to the SecretManager at the specified `serverURL`. 
-*Note: This `serverURL` must be known to the SecretManager!*
-
-#### request
-```json
-{
-    "publicKey": "",
-    "secretId": "",
-    "serverURL": "",
-    "timestamp": "",
-    "signature": ""
-}
-```
 #### response
 ```json
 {

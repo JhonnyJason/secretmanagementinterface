@@ -1,130 +1,128 @@
 ############################################################
+service = null
+export setService = (serviceToSet) -> service = serviceToSet
+
+############################################################
 export addNodeId = (publicKey, timestamp, signature) ->
-    secretStore.addNodeId(publicKey)
+    await service.addNodeId(publicKey)
     return {ok:true}
     
 
 ############################################################
 export removeNodeId = (publicKey, timestamp, signature) ->
-    secretStore.removeNodeId(publicKey)
+    await service.removeNodeId(publicKey)
     return {ok:true}
 
 
 ############################################################
 export getSecretSpace = (publicKey, timestamp, signature) ->
-    encryptedSpace = await secretHandler.getEncryptedSecretSpace(publicKey)
-    return encryptedSpace
-
+    secretObj = await service.getEncryptedSecretSpace(publicKey)
+    rE = secretObj.referencePointHex?
+    eCE = secretObj.encryptedContentHex?
+    rIS = typeof secretObj.referencePointHex == "string"
+    eCIS = typeof secretObj.encryptedContentHex == "string"
+    if rE and eCE and rIS and eCIS then return secretObj
+    ###   
+    {
+        "referencePointHex": "...",
+        "encryptedContentHex": "..."
+    }
+    ###
+    throw new Error("Service returned wrong secret object format.")
 
 ############################################################
 export getSecret = (publicKey, secretId, timestamp, signature) ->
-    secret = secretStore.getSecret(publicKey, secretId)
-    return secret
-
+    secretObj = await service.getSecret(publicKey, secretId)
+    rE = secretObj.referencePointHex?
+    eCE = secretObj.encryptedContentHex?
+    rIS = typeof secretObj.referencePointHex == "string"
+    eCIS = typeof secretObj.encryptedContentHex == "string"
+    if rE and eCE and rIS and eCIS then return secretObj
+    ###   
+    {
+        "referencePointHex": "...",
+        "encryptedContentHex": "..."
+    }
+    ###
+    throw new Error("Service returned wrong secret object format.")
+    
 
 ############################################################
 export setSecret = (publicKey, secretId, secret, timestamp, signature) ->
-    await secretHandler.setSecret(publicKey, secretId, secret)
+    await service.setSecret(publicKey, secretId, secret)
     return {ok:true}
 
 
 ############################################################
 export deleteSecret = (publicKey, secretId, timestamp, signature) ->
-    secretStore.deleteSecret(publicKey, secretId)
+    await service.deleteSecret(publicKey, secretId)
     return {ok:true}
 
 
 ############################################################
 export startAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
-    await secretStore.addSubSpaceFor(publicKey, fromId)
+    await service.addSubSpaceFor(publicKey, fromId)
     return {ok:true}
 
 
 ############################################################
 export stopAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
-    await secretStore.removeSubSpaceFor(publicKey, fromId)
+    await service.removeSubSpaceFor(publicKey, fromId)
     return {ok:true}
 
 
 ############################################################
 export shareSecretTo = (publicKey, shareToId, secretId, secret, timestamp, signature) ->
-    await secretHandler.shareSecretTo(publicKey, shareToId, secretId, secret)
+    await service.shareSecretTo(publicKey, shareToId, secretId, secret)
     return {ok:true}
 
 
 ############################################################
 export deleteSharedSecret = (publicKey, sharedToId, secretId, timestamp, signature) ->
-    secretStore.deleteSharedSecret(sharedToId, publicKey, secretId)
+    service.deleteSharedSecret(sharedToId, publicKey, secretId)
     return {ok:true}
-
-
-############################################################
-export addSyncHook = (publicKey, secretId, serverURL, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "ok": true
-}
-
-
-    ###
-    return result
-
 
 ############################################################
 export addNotificationHook = (publicKey, type, specific, timestamp, signature) ->
-    result = {}
-    ###
-    
-{
-    "ok": true
-}
-
-
-    ###
-    return result
+    await service.addNotificationHook(publicKey, type, specific)
+    return {ok: true}
 
 
 ############################################################
 export getAuthCode = (publicKey, timestamp, signature) ->
-    result = {}
+    authCode = await service.generateAuthCodeFor(publicKey)
+    if typeof authCode == "string" then return {authCode}
+    ###   
+    {
+        "authCode": "..."
+    }
     ###
-    
-{
-    "ok": true
-}
-
-    ###
-    return result
+    throw new Error("Service returned wrong authCode type.")
 
 
 ############################################################
 export addFriendServer = (authCode, serverURL, serverNodeId) ->
-    result = {}
-    ###
-    
-{
-    "ok": true
-}
-
-
-    ###
-    return result
+    await service.addFriendServer(serverURL, serverNodeId)
+    return {ok: true}
 
 
 ############################################################
 export getNodeId = (authCode) ->
-    result = {}
+    result = await service.getSignedNodeId()    
+    pKE = result.publicKey?
+    tSE = result.timestamp?
+    sE = result.signature?
+    pKEIS = typeof result.publicKey == "string"
+    tSEIS = typeof result.timestamp == "string"
+    sEIS = typeof result.signature == "string"
+    if pKE and tSE and sE and pKEIS and tSEIS and sEIS then return result
     ###
-    
-{
-    "publicKey": "...",
-    "timestamp": "...",
-    "signature": "..."
-}
-
+    {
+        "publicKey": "...",
+        "timestamp": "...",
+        "signature": "..."
+    }
     ###
-    return result
+    throw new Error("Service returned wrong signedNodeId Object format.")
 
 

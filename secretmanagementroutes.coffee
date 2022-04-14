@@ -1,4 +1,7 @@
 ############################################################
+import * as h from "./secretmanagementhandlers"
+
+############################################################
 export addNodeId = (req, res) ->
     try
         response = await h.addNodeId(req.body.publicKey, req.body.timestamp, req.body.signature)
@@ -74,14 +77,6 @@ export shareSecretTo = (req, res) ->
 export deleteSharedSecret = (req, res) ->
     try
         response = await h.deleteSharedSecret(req.body.publicKey, req.body.sharedToId, req.body.secretId, req.body.timestamp, req.body.signature)
-        res.send(response)
-    catch err then res.send({error: err.stack})
-    return
-
-############################################################
-export addSyncHook = (req, res) ->
-    try
-        response = await h.addSyncHook(req.body.publicKey, req.body.secretId, req.body.serverURL, req.body.timestamp, req.body.signature)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
