@@ -48,19 +48,21 @@ export getSecret = (publicKey, secretId, timestamp, signature) ->
     
 
 ############################################################
-export setSecret = (publicKey, secretId, secret, timestamp, signature) ->
+export setSecret = (publicKey, secretId, secret, timestamp, signature, req) ->
+    urlToSync = service.getURLToSync(publicKey)
+    if urlToSync? then syncToURL(req)
     await service.setSecret(publicKey, secretId, secret)
     return {ok:true}
 
 
 ############################################################
-export deleteSecret = (publicKey, secretId, timestamp, signature) ->
+export deleteSecret = (publicKey, secretId, timestamp, signature, reqData) ->
     await service.deleteSecret(publicKey, secretId)
     return {ok:true}
 
 
 ############################################################
-export startAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
+export startAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature, reqData) ->
     await service.addSubSpaceFor(publicKey, fromId)
     return {ok:true}
 
