@@ -6,8 +6,8 @@
 
 ### /addNodeId
 If there is no `secretSpace` for this `nodeId` it creates an empty object as its `secretSpace`.
-If there is a `dateOfDeath` defined this `nodeId` is temporary and will be deleted at the specified date.
-Also if we have a `dateOfDeath` defined and a `secretSpace` already exists for this `nodeId` we will cause an error.
+If there is a `closureDate` defined this `nodeId` is temporary and will be deleted at the specified date.
+Also if we have a `closureDate` defined and a `secretSpace` already exists for this `nodeId` we will cause an error.
 
 All of this will only work having a valid `authCode`. This way we could limit the creation of `secretSpaces` to Users we trust and want to have using our servers.
 
@@ -16,7 +16,7 @@ All of this will only work having a valid `authCode`. This way we could limit th
 {
     "authCode": "",
     "publicKey": "",
-    "dateOfDeath": "",
+    "closureDate": "",
     "timestamp": "",
     "signature": ""
 }
@@ -125,15 +125,19 @@ Deletes the given `secretId` from the `secretSpace`.
 }
 ```
 
-
 ### /startAcceptingSecretsFrom
+
 Now we will create the empty Object for a foreign subSpace which goes by the key `fromId` within our `secretSpace`.
 Only now the `fromId` may write secrets into this foreign subSpace.
+
+*Note: could be renamed as openSubSpaceFor*
+
 #### request
 ```json
 {
     "publicKey": "",
     "fromId": "",
+    "closureDate": "",
     "timestamp": "",
     "signature": ""
 }
@@ -148,6 +152,9 @@ Only now the `fromId` may write secrets into this foreign subSpace.
 ### /stopAcceptingSecretsFrom
 This will remove the Object which goes by the key `fromId` within our `secretSpace`.
 All shared secrets in there are lost. And the `fromId` could not provide any secrets for us.
+
+*Note: could be renamed as closeSubSpaceFor*
+
 #### request
 ```json
 {
@@ -167,7 +174,6 @@ All shared secrets in there are lost. And the `fromId` could not provide any sec
 
 ### /shareSecretTo
 This will write the secret into the sub-space of the `shareToId` if it exists.
-*Note this `shareToId` may also be given in the way of `servername.domain.tld:shareToId`.*
 
 #### request
 ```json
@@ -228,6 +234,7 @@ This will delete the specified `secretId` if it exists in the available subs-spa
     "signature": ""
 }
 ```
+
 #### response
 ```json
 {
