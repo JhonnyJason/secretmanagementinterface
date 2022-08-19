@@ -4,7 +4,7 @@ import * as h from "./secretmanagementhandlers"
 ############################################################
 export addNodeId = (req, res) ->
     try
-        response = await h.addNodeId(req.body.publicKey, req.body.timestamp, req.body.signature)
+        response = await h.addNodeId(req.body.authCode, req.body.publicKey, req.body.closureDate, req.body.timestamp, req.body.signature)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
