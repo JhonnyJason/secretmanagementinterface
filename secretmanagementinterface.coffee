@@ -1,8 +1,8 @@
 import { postData } from "thingy-network-base"
 
 ############################################################
-export addNodeId = (sciURL, publicKey, timestamp, signature) ->
-    requestObject = { publicKey, timestamp, signature }
+export addNodeId = (sciURL, authCode, publicKey, closureDate, timestamp, signature) ->
+    requestObject = { authCode, publicKey, closureDate, timestamp, signature }
     requestURL = sciURL+"/addNodeId"
     return postData(requestURL, requestObject)
 
