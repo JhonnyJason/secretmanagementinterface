@@ -4,7 +4,6 @@ export setService = (serviceToSet) -> service = serviceToSet
 
 ############################################################
 export addNodeId = (authCode, publicKey, closureDate, timestamp, signature) ->
-    await service.assertLegalAction(authCode, "addNodeId")
     await service.addNodeId(publicKey, closureDate)
     return {ok:true}
 
