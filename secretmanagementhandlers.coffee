@@ -4,7 +4,7 @@ export setService = (serviceToSet) -> service = serviceToSet
 
 ############################################################
 export addNodeId = (authCode, publicKey, closureDate, timestamp, signature) ->
-    await service.addNodeId(publicKey, closureDate)
+    await service.addNodeId(authCode, publicKey, closureDate)
     return {ok:true}
 
 ############################################################
