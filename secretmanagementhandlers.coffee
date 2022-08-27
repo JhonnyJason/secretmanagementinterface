@@ -3,18 +3,18 @@ service = null
 export setService = (serviceToSet) -> service = serviceToSet
 
 ############################################################
-export addNodeId = (authCode, publicKey, closureDate, timestamp, signature) ->
+export addNodeId = (authCode, publicKey, closureDate, timestamp, signature, nonce) ->
     await service.addNodeId(authCode, publicKey, closureDate)
     return {ok:true}
 
 ############################################################
-export removeNodeId = (publicKey, timestamp, signature) ->
+export removeNodeId = (publicKey, timestamp, signature, nonce) ->
     await service.removeNodeId(publicKey)
     return {ok:true}
 
 
 ############################################################
-export getSecretSpace = (publicKey, timestamp, signature) ->
+export getSecretSpace = (publicKey, timestamp, signature, nonce) ->
     secretObj = await service.getEncryptedSecretSpace(publicKey)
     rE = secretObj.referencePointHex?
     eCE = secretObj.encryptedContentHex?
@@ -30,7 +30,24 @@ export getSecretSpace = (publicKey, timestamp, signature) ->
     throw new Error("Service returned wrong secret object format.")
 
 ############################################################
-export getSecret = (publicKey, secretId, timestamp, signature) ->
+export getSubSpace = (publicKey, fromId, timestamp, signature, nonce) ->
+    secretObj = await service.getEncryptedSubSpace(publicKey, fromId)
+    rE = secretObj.referencePointHex?
+    eCE = secretObj.encryptedContentHex?
+    rIS = typeof secretObj.referencePointHex == "string"
+    eCIS = typeof secretObj.encryptedContentHex == "string"
+    if rE and eCE and rIS and eCIS then return secretObj
+    ###   
+    {
+        "referencePointHex": "...",
+        "encryptedContentHex": "..."
+    }
+    ###
+    throw new Error("Service returned wrong secret object format.")
+
+
+############################################################
+export getSecret = (publicKey, secretId, timestamp, signature, nonce) ->
     secretObj = await service.getSecret(publicKey, secretId)
     rE = secretObj.referencePointHex?
     eCE = secretObj.encryptedContentHex?
@@ -45,52 +62,62 @@ export getSecret = (publicKey, secretId, timestamp, signature) ->
     ###
     throw new Error("Service returned wrong secret object format.")
     
-
 ############################################################
-export setSecret = (publicKey, secretId, secret, timestamp, signature, req) ->
-    urlToSync = service.getURLToSync(publicKey)
-    if urlToSync? then syncToURL(req)
+export setSecret = (publicKey, secretId, secret, timestamp, signature, nonce) ->
     await service.setSecret(publicKey, secretId, secret)
     return {ok:true}
 
-
 ############################################################
-export deleteSecret = (publicKey, secretId, timestamp, signature, reqData) ->
+export deleteSecret = (publicKey, secretId, timestamp, signature, nonce) ->
     await service.deleteSecret(publicKey, secretId)
     return {ok:true}
 
 
 ############################################################
-export startAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature, reqData) ->
+export startAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature, nonce) ->
     await service.addSubSpaceFor(publicKey, fromId)
     return {ok:true}
 
-
 ############################################################
-export stopAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature) ->
+export stopAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature, nonce) ->
     await service.removeSubSpaceFor(publicKey, fromId)
     return {ok:true}
 
 
 ############################################################
-export shareSecretTo = (publicKey, shareToId, secretId, secret, timestamp, signature) ->
+export getSecretFrom = (publicKey, fromId, secretId, timestamp, signature, nonce) ->
+    secretObj = await service.getSecretFrom(publicKey, fromId, secretId)
+    rE = secretObj.referencePointHex?
+    eCE = secretObj.encryptedContentHex?
+    rIS = typeof secretObj.referencePointHex == "string"
+    eCIS = typeof secretObj.encryptedContentHex == "string"
+    if rE and eCE and rIS and eCIS then return secretObj
+    ###   
+    {
+        "referencePointHex": "...",
+        "encryptedContentHex": "..."
+    }
+    ###
+    throw new Error("Service returned wrong secret object format.")
+    
+############################################################
+export shareSecretTo = (publicKey, shareToId, secretId, secret, timestamp, signature, nonce) ->
     await service.shareSecretTo(publicKey, shareToId, secretId, secret)
     return {ok:true}
 
-
 ############################################################
-export deleteSharedSecret = (publicKey, sharedToId, secretId, timestamp, signature) ->
+export deleteSharedSecret = (publicKey, sharedToId, secretId, timestamp, signature, nonce) ->
     service.deleteSharedSecret(sharedToId, publicKey, secretId)
     return {ok:true}
 
+
 ############################################################
-export addNotificationHook = (publicKey, type, specific, timestamp, signature) ->
+export addNotificationHook = (publicKey, type, specific, timestamp, signature, nonce) ->
     await service.addNotificationHook(publicKey, type, specific)
     return {ok: true}
 
-
 ############################################################
-export getAuthCode = (publicKey, timestamp, signature) ->
+export getAuthCode = (publicKey, timestamp, signature, nonce) ->
     authCode = await service.generateAuthCodeFor(publicKey)
     if typeof authCode == "string" then return {authCode}
     ###   
@@ -100,12 +127,10 @@ export getAuthCode = (publicKey, timestamp, signature) ->
     ###
     throw new Error("Service returned wrong authCode type.")
 
-
 ############################################################
 export addFriendServer = (authCode, serverURL, serverNodeId) ->
     await service.addFriendServer(serverURL, serverNodeId)
     return {ok: true}
-
 
 ############################################################
 export getNodeId = (authCode) ->
