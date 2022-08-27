@@ -75,8 +75,8 @@ export addNotificationHook = (sciURL, publicKey, type, specific, timestamp, sign
     requestURL = sciURL+"/addNotificationHook"
     return postData(requestURL, requestObject)
 
-export getAuthCode = (sciURL, publicKey, timestamp, signature, nonce) ->
-    requestObject = { publicKey, timestamp, signature, nonce }
+export getAuthCode = (sciURL, publicKey, action, timestamp, signature, nonce) ->
+    requestObject = { publicKey, timestamp, action, signature, nonce }
     requestURL = sciURL+"/getAuthCode"
     return postData(requestURL, requestObject)
 
