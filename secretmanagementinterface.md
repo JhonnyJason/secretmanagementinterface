@@ -18,7 +18,8 @@ All of this will only work having a valid `authCode`. This way we could limit th
     "publicKey": "",
     "closureDate": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 #### response
@@ -36,7 +37,8 @@ This will remove the certain NodeId with all its `secretSpace` and sub-spaces.
 {
     "publicKey": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 #### response
@@ -53,7 +55,8 @@ Returns the encrypted version of the whole `secretSpace`.
 {
     "publicKey": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 #### response
@@ -64,6 +67,28 @@ Returns the encrypted version of the whole `secretSpace`.
 }
 ```
 
+### /getSubSpace
+Returns the encrypted version of the specified `subSpace`.
+#### request
+```json
+{
+    "publicKey": "",
+    "fromId": "",
+    "timestamp": "",
+    "signature": "",
+    "nonce": ""
+}
+```
+#### response
+```json
+{
+    "referencePoint": "...",
+    "encryptedContent": "..."
+}
+```
+
+
+
 ### /getSecret
 Returns the encrypted secret of the given `secretId`.
 
@@ -73,7 +98,8 @@ Returns the encrypted secret of the given `secretId`.
     "publicKey": "",
     "secretId": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce", ""
 }
 ```
 #### response
@@ -96,7 +122,8 @@ It still is recommended to also encrypt the secret beforen sending it. (As we sh
     "secretId": "",
     "secret": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 #### response
@@ -115,7 +142,8 @@ Deletes the given `secretId` from the `secretSpace`.
     "publicKey": "",
     "secretId": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 #### response
@@ -139,7 +167,8 @@ Only now the `fromId` may write secrets into this foreign subSpace.
     "fromId": "",
     "closureDate": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 #### response
@@ -161,7 +190,8 @@ All shared secrets in there are lost. And the `fromId` could not provide any sec
     "publicKey": "",
     "fromId": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 #### response
@@ -171,6 +201,29 @@ All shared secrets in there are lost. And the `fromId` could not provide any sec
 }
 
 ```
+
+### /getSecretFrom
+Returns the encrypted secret shared to us by `fromId` having the id `secretId`.
+
+#### request
+```json
+{
+    "publicKey": "",
+    "fromId": "",
+    "secretId": "",
+    "timestamp": "",
+    "signature": "",
+    "nonce": ""
+}
+```
+#### response
+```json
+{
+    "referencePoint": "...",
+    "encryptedContent": "..."
+}
+```
+
 
 ### /shareSecretTo
 This will write the secret into the sub-space of the `shareToId` if it exists.
@@ -183,7 +236,8 @@ This will write the secret into the sub-space of the `shareToId` if it exists.
     "secretId": "",
     "secret": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 #### response
@@ -203,7 +257,8 @@ This will delete the specified `secretId` if it exists in the available subs-spa
     "sharedToId": "",
     "secretId": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 #### response
@@ -231,7 +286,8 @@ This will delete the specified `secretId` if it exists in the available subs-spa
     "type": "",
     "specific": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 
@@ -244,15 +300,19 @@ This will delete the specified `secretId` if it exists in the available subs-spa
 ```
 
 ### /getAuthCode
-This request lets the server share the current authCode to the requestors `secretSpace`.
+This request creates an authCode for a certain action.
+The `authCode` will be shared to the requestor.
+
 *Note: we need to accept secrets from the SecretManager first!*
 
 #### request
 ```json
 {
+    "action": "",
     "publicKey": "",
     "timestamp": "",
-    "signature": ""
+    "signature": "",
+    "nonce": ""
 }
 ```
 #### response
