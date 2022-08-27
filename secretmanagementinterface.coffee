@@ -1,66 +1,86 @@
 import { postData } from "thingy-network-base"
 
 ############################################################
-export addNodeId = (sciURL, authCode, publicKey, closureDate, timestamp, signature) ->
-    requestObject = { authCode, publicKey, closureDate, timestamp, signature }
+export addNodeId = (sciURL, authCode, publicKey, closureDate, timestamp, signature, nonce) ->
+    requestObject = { authCode, publicKey, closureDate, timestamp, signature, nonce }
     requestURL = sciURL+"/addNodeId"
     return postData(requestURL, requestObject)
 
-export removeNodeId = (sciURL, publicKey, timestamp, signature) ->
-    requestObject = { publicKey, timestamp, signature }
+export removeNodeId = (sciURL, publicKey, timestamp, signature, nonce) ->
+    requestObject = { publicKey, timestamp, signature, nonce }
     requestURL = sciURL+"/removeNodeId"
     return postData(requestURL, requestObject)
 
-export getSecretSpace = (sciURL, publicKey, timestamp, signature) ->
-    requestObject = { publicKey, timestamp, signature }
+############################################################
+export getSecretSpace = (sciURL, publicKey, timestamp, signature, nonce) ->
+    requestObject = { publicKey, timestamp, signature, nonce }
     requestURL = sciURL+"/getSecretSpace"
     return postData(requestURL, requestObject)
 
-export getSecret = (sciURL, publicKey, secretId, timestamp, signature) ->
-    requestObject = { publicKey, secretId, timestamp, signature }
+export getSubSpace = (sciURL, publicKey, fromId, timestamp, signature, nonce) ->
+    requestObject = { publicKey, fromId, timestamp, signature, nonce }
+    requestURL = sciURL+"/getSubSpace"
+    return postData(requestURL, requestObject)
+
+
+############################################################
+export getSecret = (sciURL, publicKey, secretId, timestamp, signature, nonce) ->
+    requestObject = { publicKey, secretId, timestamp, signature, nonce }
     requestURL = sciURL+"/getSecret"
     return postData(requestURL, requestObject)
 
-export setSecret = (sciURL, publicKey, secretId, secret, timestamp, signature) ->
-    requestObject = { publicKey, secretId, secret, timestamp, signature }
+export setSecret = (sciURL, publicKey, secretId, secret, timestamp, signature, nonce) ->
+    requestObject = { publicKey, secretId, secret, timestamp, signature, nonce }
     requestURL = sciURL+"/setSecret"
     return postData(requestURL, requestObject)
 
-export deleteSecret = (sciURL, publicKey, secretId, timestamp, signature) ->
-    requestObject = { publicKey, secretId, timestamp, signature }
+export deleteSecret = (sciURL, publicKey, secretId, timestamp, signature, nonce) ->
+    requestObject = { publicKey, secretId, timestamp, signature, nonce }
     requestURL = sciURL+"/deleteSecret"
     return postData(requestURL, requestObject)
 
-export startAcceptingSecretsFrom = (sciURL, publicKey, fromId, timestamp, signature) ->
-    requestObject = { publicKey, fromId, timestamp, signature }
+
+############################################################
+export startAcceptingSecretsFrom = (sciURL, publicKey, fromId, timestamp, signature, nonce) ->
+    requestObject = { publicKey, fromId, timestamp, signature, nonce }
     requestURL = sciURL+"/startAcceptingSecretsFrom"
     return postData(requestURL, requestObject)
 
-export stopAcceptingSecretsFrom = (sciURL, publicKey, fromId, timestamp, signature) ->
-    requestObject = { publicKey, fromId, timestamp, signature }
+export stopAcceptingSecretsFrom = (sciURL, publicKey, fromId, timestamp, signature, nonce) ->
+    requestObject = { publicKey, fromId, timestamp, signature, nonce }
     requestURL = sciURL+"/stopAcceptingSecretsFrom"
     return postData(requestURL, requestObject)
 
-export shareSecretTo = (sciURL, publicKey, shareToId, secretId, secret, timestamp, signature) ->
-    requestObject = { publicKey, shareToId, secretId, secret, timestamp, signature }
+
+############################################################
+export getSecretFrom = (sciURL, publicKey, fromId, secretId, timestamp, signature, nonce) ->
+    requestObject = { publicKey, fromId, secretId, timestamp, signature, nonce }
+    requestURL = sciURL+"/getSecretFrom"
+    return postData(requestURL, requestObject)
+
+export shareSecretTo = (sciURL, publicKey, shareToId, secretId, secret, timestamp, signature, nonce) ->
+    requestObject = { publicKey, shareToId, secretId, secret, timestamp, signature, nonce }
     requestURL = sciURL+"/shareSecretTo"
     return postData(requestURL, requestObject)
 
-export deleteSharedSecret = (sciURL, publicKey, sharedToId, secretId, timestamp, signature) ->
-    requestObject = { publicKey, sharedToId, secretId, timestamp, signature }
+export deleteSharedSecret = (sciURL, publicKey, sharedToId, secretId, timestamp, signature, nonce) ->
+    requestObject = { publicKey, sharedToId, secretId, timestamp, signature, nonce }
     requestURL = sciURL+"/deleteSharedSecret"
     return postData(requestURL, requestObject)
 
-export addNotificationHook = (sciURL, publicKey, type, specific, timestamp, signature) ->
-    requestObject = { publicKey, type, specific, timestamp, signature }
+
+############################################################
+export addNotificationHook = (sciURL, publicKey, type, specific, timestamp, signature, nonce) ->
+    requestObject = { publicKey, type, specific, timestamp, signature, nonce }
     requestURL = sciURL+"/addNotificationHook"
     return postData(requestURL, requestObject)
 
-export getAuthCode = (sciURL, publicKey, timestamp, signature) ->
-    requestObject = { publicKey, timestamp, signature }
+export getAuthCode = (sciURL, publicKey, timestamp, signature, nonce) ->
+    requestObject = { publicKey, timestamp, signature, nonce }
     requestURL = sciURL+"/getAuthCode"
     return postData(requestURL, requestObject)
 
+############################################################
 export addFriendServer = (sciURL, authCode, serverURL, serverNodeId) ->
     requestObject = { authCode, serverURL, serverNodeId }
     requestURL = sciURL+"/addFriendServer"
