@@ -41,8 +41,8 @@ export deleteSecret = (sciURL, publicKey, secretId, timestamp, signature, nonce)
 
 
 ############################################################
-export startAcceptingSecretsFrom = (sciURL, publicKey, fromId, timestamp, signature, nonce) ->
-    requestObject = { publicKey, fromId, timestamp, signature, nonce }
+export startAcceptingSecretsFrom = (sciURL, publicKey, fromId, closureDate, timestamp, signature, nonce) ->
+    requestObject = { publicKey, fromId, closureDate, timestamp, signature, nonce }
     requestURL = sciURL+"/startAcceptingSecretsFrom"
     return postData(requestURL, requestObject)
 
