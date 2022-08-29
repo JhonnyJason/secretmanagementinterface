@@ -60,7 +60,7 @@ export deleteSecret = (req, res) ->
 ############################################################
 export startAcceptingSecretsFrom = (req, res) ->
     try
-        response = await h.startAcceptingSecretsFrom(req.body.publicKey, req.body.fromId, req.body.timestamp, req.body.signature, req.body.nonce)
+        response = await h.startAcceptingSecretsFrom(req.body.publicKey, req.body.fromId, req.body.closureDate,req.body.timestamp, req.body.signature, req.body.nonce)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
