@@ -2,17 +2,17 @@
 import * as h from "./secretmanagementhandlers"
 
 ############################################################
-export addNodeId = (req, res) ->
+export openSecretSpace = (req, res) ->
     try
-        response = await h.addNodeId(req.body.authCode, req.body.publicKey, req.body.closureDate, req.body.timestamp, req.body.signature, req.body.nonce)
+        response = await h.openSecretSpace(req.body.authCode, req.body.publicKey, req.body.closureDate, req.body.timestamp, req.body.signature, req.body.nonce)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
 
 ############################################################
-export removeNodeId = (req, res) ->
+export deleteSecretSpace = (req, res) ->
     try
-        response = await h.removeNodeId(req.body.publicKey, req.body.timestamp, req.body.signature, req.body.nonce)
+        response = await h.deleteSecretSpace(req.body.publicKey, req.body.timestamp, req.body.signature, req.body.nonce)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
@@ -25,10 +25,11 @@ export getSecretSpace = (req, res) ->
     catch err then res.send({error: err.stack})
     return
 
+
 ############################################################
-export getSubSpace = (req, res) ->
+export setSecret = (req, res) ->
     try
-        response = await h.getSubSpace(req.body.publicKey, req.body.fromId, req.body.timestamp, req.body.signature, req.body.nonce)
+        response = await h.setSecret(req.body.publicKey, req.body.secretId, req.body.secret, req.body.timestamp, req.body.signature, req.body.nonce)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
@@ -42,14 +43,6 @@ export getSecret = (req, res) ->
     return
 
 ############################################################
-export setSecret = (req, res) ->
-    try
-        response = await h.setSecret(req.body.publicKey, req.body.secretId, req.body.secret, req.body.timestamp, req.body.signature, req.body.nonce)
-        res.send(response)
-    catch err then res.send({error: err.stack})
-    return
-
-############################################################
 export deleteSecret = (req, res) ->
     try
         response = await h.deleteSecret(req.body.publicKey, req.body.secretId, req.body.timestamp, req.body.signature, req.body.nonce)
@@ -57,18 +50,36 @@ export deleteSecret = (req, res) ->
     catch err then res.send({error: err.stack})
     return
 
+
 ############################################################
-export startAcceptingSecretsFrom = (req, res) ->
+export openSubSpace = (req, res) ->
     try
-        response = await h.startAcceptingSecretsFrom(req.body.publicKey, req.body.fromId, req.body.closureDate,req.body.timestamp, req.body.signature, req.body.nonce)
+        response = await h.openSubSpace(req.body.publicKey, req.body.fromId, req.body.closureDate,req.body.timestamp, req.body.signature, req.body.nonce)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
 
 ############################################################
-export stopAcceptingSecretsFrom = (req, res) ->
+export getSubSpace = (req, res) ->
     try
-        response = await h.stopAcceptingSecretsFrom(req.body.publicKey, req.body.fromId, req.body.timestamp, req.body.signature, req.body.nonce)
+        response = await h.getSubSpace(req.body.publicKey, req.body.fromId, req.body.timestamp, req.body.signature, req.body.nonce)
+        res.send(response)
+    catch err then res.send({error: err.stack})
+    return
+
+############################################################
+export deleteSubSpace = (req, res) ->
+    try
+        response = await h.deleteSubSpace(req.body.publicKey, req.body.fromId, req.body.timestamp, req.body.signature, req.body.nonce)
+        res.send(response)
+    catch err then res.send({error: err.stack})
+    return
+
+
+############################################################
+export shareSecretTo = (req, res) ->
+    try
+        response = await h.shareSecretTo(req.body.publicKey, req.body.shareToId, req.body.secretId, req.body.secret, req.body.oneTimeSecret, req.body.timestamp, req.body.signature, req.body.nonce)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
@@ -82,14 +93,6 @@ export getSecretFrom = (req, res) ->
     return
 
 ############################################################
-export shareSecretTo = (req, res) ->
-    try
-        response = await h.shareSecretTo(req.body.publicKey, req.body.shareToId, req.body.secretId, req.body.secret, req.body.timestamp, req.body.signature, req.body.nonce)
-        res.send(response)
-    catch err then res.send({error: err.stack})
-    return
-
-############################################################
 export deleteSharedSecret = (req, res) ->
     try
         response = await h.deleteSharedSecret(req.body.publicKey, req.body.sharedToId, req.body.secretId, req.body.timestamp, req.body.signature, req.body.nonce)
@@ -97,26 +100,44 @@ export deleteSharedSecret = (req, res) ->
     catch err then res.send({error: err.stack})
     return
 
+
 ############################################################
 export addNotificationHook = (req, res) ->
     try
-        response = await h.addNotificationHook(req.body.publicKey, req.body.type, req.body.specific, req.body.timestamp, req.body.signature, req.body.nonce)
+        response = await h.addNotificationHook(req.body.publicKey, req.body.type, req.body.targetId, req.body.notifyURL,  req.body.timestamp, req.body.signature, req.body.nonce)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
 
 ############################################################
-export getAuthCode = (req, res) ->
+export getNotificationHooks = (req, res) ->
     try
-        response = await h.getAuthCode(req.body.publicKey, req.body.timestamp, req.body.signature, req.body.nonce)
+        response = await h.getNotificationHooks(req.body.publicKey, req.body.targetId, req.body.timestamp, req.body.signature, req.body.nonce)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
 
 ############################################################
-export addFriendServer = (req, res) ->
+export deleteNotificationHook = (req, res) ->
     try
-        response = await h.addFriendServer(req.body.authCode, req.body.serverURL, req.body.serverNodeId)
+        response = await h.deleteNotificationHook(req.body.publicKey, req.body.notificationHookId, req.body.timestamp, req.body.signature, req.body.nonce)
+        res.send(response)
+    catch err then res.send({error: err.stack})
+    return
+
+
+############################################################
+export createAuthCode = (req, res) ->
+    try
+        response = await h.createAuthCode(req.body.publicKey, req.body.timestamp, req.body.signature, req.body.nonce)
+        res.send(response)
+    catch err then res.send({error: err.stack})
+    return
+
+############################################################
+export setRequestableServer = (req, res) ->
+    try
+        response = await h.setRequestableServer(req.body.authCode, req.body.serverURL, req.body.serverNodeId)
         res.send(response)
     catch err then res.send({error: err.stack})
     return

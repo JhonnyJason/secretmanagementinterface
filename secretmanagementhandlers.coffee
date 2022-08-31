@@ -4,8 +4,8 @@ export setService = (serviceToSet) -> service = serviceToSet
 
 
 ############################################################
-export addNodeId = (authCode, publicKey, closureDate, timestamp, signature, nonce) ->
-    await service.addNodeId(authCode, publicKey, closureDate)
+export openSecretSpace = (authCode, publicKey, closureDate, timestamp, signature, nonce) ->
+    await service.openSecretSpace(authCode, publicKey, closureDate)
     return {ok:true}
 
 ############################################################
@@ -25,8 +25,8 @@ export getSecretSpace = (publicKey, timestamp, signature, nonce) ->
     throw new Error("Service returned wrong secret object format.")
 
 ############################################################
-export removeNodeId = (publicKey, timestamp, signature, nonce) ->
-    await service.removeNodeId(publicKey)
+export deleteSecretSpace = (publicKey, timestamp, signature, nonce) ->
+    await service.deleteSecretSpace(publicKey)
     return {ok:true}
 
 
@@ -58,7 +58,7 @@ export deleteSecret = (publicKey, secretId, timestamp, signature, nonce) ->
 
 
 ############################################################
-export startAcceptingSecretsFrom = (publicKey, fromId, closureDate, timestamp, signature, nonce) ->
+export openSubSpace = (publicKey, fromId, closureDate, timestamp, signature, nonce) ->
     await service.createSubSpaceFor(publicKey, fromId, closureDate)
     return {ok:true}
 
@@ -79,14 +79,14 @@ export getSubSpace = (publicKey, fromId, timestamp, signature, nonce) ->
     throw new Error("Service returned wrong secret object format.")
 
 ############################################################
-export stopAcceptingSecretsFrom = (publicKey, fromId, timestamp, signature, nonce) ->
+export deleteSubSpace = (publicKey, fromId, timestamp, signature, nonce) ->
     await service.removeSubSpaceFor(publicKey, fromId)
     return {ok:true}
 
 
 ############################################################
-export shareSecretTo = (publicKey, shareToId, secretId, secret, timestamp, signature, nonce) ->
-    await service.shareSecretTo(publicKey, shareToId, secretId, secret)
+export shareSecretTo = (publicKey, shareToId, secretId, secret, oneTimeSecret, timestamp, signature, nonce) ->
+    await service.shareSecretTo(publicKey, shareToId, secretId, secret, oneTimeSecret)
     return {ok:true}
 
 ############################################################
@@ -112,12 +112,23 @@ export deleteSharedSecret = (publicKey, sharedToId, secretId, timestamp, signatu
 
 
 ############################################################
-export addNotificationHook = (publicKey, type, specific, timestamp, signature, nonce) ->
-    await service.addNotificationHook(publicKey, type, specific)
+export addNotificationHook = (publicKey, type, targetId, notifyURL, timestamp, signature, nonce) ->
+    notificationHookId = await service.addNotificationHook(publicKey, type, targetId, notifyURL)
+    if typeof notificationHookId != "string" then throw new Error("Service did not return a string for the notificationHookId.")
+    return {notificationHookId}
+
+export getNotificationHooks = (publicKey, targetId, timestamp, signature, nonce) ->
+    notificationHooks = await service.getNotificationHooks(publicKey, targetId)
+    if !Array.isArray(notificationHooks) then throw new Error("Service did not return an Array for the notificationHooks.")
+    return {notificationHooks}
+
+export deleteNotificationHook = (publicKey, notificationHookId, timestamp, signature, nonce) ->
+    await service.deleteNotificationHook(publicKey, notificationHookId)
     return {ok: true}
 
+
 ############################################################
-export getAuthCode = (publicKey, timestamp, signature, nonce) ->
+export createAuthCode = (publicKey, timestamp, signature, nonce) ->
     authCode = await service.generateAuthCodeFor(publicKey)
     if typeof authCode == "string" then return {authCode}
     ###   
@@ -128,8 +139,8 @@ export getAuthCode = (publicKey, timestamp, signature, nonce) ->
     throw new Error("Service returned wrong authCode type.")
 
 ############################################################
-export addFriendServer = (authCode, serverURL, serverNodeId) ->
-    await service.addFriendServer(serverURL, serverNodeId)
+export setRequestableServer = (authCode, serverURL, serverNodeId) ->
+    await service.setRequestableServer(serverURL, serverNodeId)
     return {ok: true}
 
 ############################################################
