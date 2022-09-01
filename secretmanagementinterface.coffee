@@ -1,5 +1,18 @@
 import { postData } from "thingy-network-base"
 
+
+############################################################
+export getNodeId = (sciURL, authCode) ->
+    requestObject = { authCode }
+    requestURL = sciURL+"/getNodeId"
+    return postData(requestURL, requestObject)
+
+export createAuthCode = (sciURL, publicKey, action, timestamp, signature, nonce) ->
+    requestObject = { publicKey, timestamp, action, signature, nonce }
+    requestURL = sciURL+"/createAuthCode"
+    return postData(requestURL, requestObject)
+
+
 ############################################################
 export openSecretSpace = (sciURL, authCode, publicKey, closureDate, timestamp, signature, nonce) ->
     requestObject = { authCode, publicKey, closureDate, timestamp, signature, nonce }
@@ -93,15 +106,3 @@ export setRequestableServer = (sciURL, authCode, serverURL, serverNodeId) ->
     return postData(requestURL, requestObject)
 
 ##TODO requestable Server stuff
-
-
-############################################################
-export createAuthCode = (sciURL, publicKey, action, timestamp, signature, nonce) ->
-    requestObject = { publicKey, timestamp, action, signature, nonce }
-    requestURL = sciURL+"/createAuthCode"
-    return postData(requestURL, requestObject)
-
-export getNodeId = (sciURL, authCode) ->
-    requestObject = { authCode }
-    requestURL = sciURL+"/getNodeId"
-    return postData(requestURL, requestObject)
