@@ -5,6 +5,66 @@
 
 For further reference what the Secret Management is all about [read this](https://hackmd.io/PZjpRfzPSBCqS-8K54x2jA).
 
+## Basic
+
+### /getNodeId
+Returns the `serverNodeId` of the Secret Manager service.
+
+Requires an `authCode` to actually do something.
+
+For general public requests we use the `authCode` of `deadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabe`.
+This is the default on any new Instance - it is recommended to switch the publicly known `authCode` frequently in production.
+
+#### request
+```json
+{
+    "authCode": "deadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabe"
+}
+```
+
+#### response
+```json
+{
+    "serverNodeId": "...",
+    "timestamp": "...",
+    "signature": "..."
+}
+```
+
+### /createAuthCode
+This request creates an `authCode` for a certain action.
+
+The `authCode` will be shared to the requestor.
+Therefore we need to accept secrets from the SecretManager first.
+
+Actions that require authCodes:
+- `getNodeId`
+- `setRequestableServer`
+- `deleteRequestableServer`
+- `openSecretSpace`
+
+
+#### request
+```json
+{
+    "action": "",
+    "publicKey": "",
+    "timestamp": "",
+    "signature": "",
+    "nonce": ""
+}
+```
+#### response
+```json
+{
+    "authCode": "",
+    "timestamp": "",
+    "signature": "",
+    "nonce": ""
+}
+```
+
+
 ## Secret Spaces
 
 ### /openSecretSpace
@@ -434,65 +494,4 @@ The notification hook is identified by it's `id` specified here as `notification
     "ok": true
 }
 
-```
-
-
-## Miscellaneous
-
-### /getNodeId
-Returns the `serverNodeId` of the Secret Manager service.
-
-Requires an `authCode` to actually do something.
-
-For general public requests we use the `authCode` of `deadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabe`.
-This is the default on any new Instance - it is recommended to switch the publicly known `authCode` frequently in production.
-
-#### request
-```json
-{
-    "authCode": "deadbeefcafebabedeadbeefcafebabedeadbeefcafebabedeadbeefcafebabe"
-}
-```
-
-#### response
-```json
-{
-    "serverNodeId": "...",
-    "timestamp": "...",
-    "signature": "...",
-    "nonce": ""
-}
-```
-
-### /createAuthCode
-This request creates an `authCode` for a certain action.
-
-The `authCode` will be shared to the requestor.
-Therefore we need to accept secrets from the SecretManager first.
-
-Actions that require authCodes:
-- `getNodeId`
-- `setRequestableServer`
-- `deleteRequestableServer`
-- `openSecretSpace`
-
-
-#### request
-```json
-{
-    "action": "",
-    "publicKey": "",
-    "timestamp": "",
-    "signature": "",
-    "nonce": ""
-}
-```
-#### response
-```json
-{
-    "authCode": "",
-    "timestamp": "",
-    "signature": "",
-    "nonce": ""
-}
 ```
