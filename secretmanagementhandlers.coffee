@@ -2,6 +2,39 @@
 service = null
 export setService = (serviceToSet) -> service = serviceToSet
 
+############################################################
+export getNodeId = (authCode) ->
+    result = await service.getSignedNodeId(authCode)    
+    sNIE = result.serverNodeId?
+    tSE = result.timestamp?
+    sE = result.signature?
+    sNIIS = typeof result.serverNodeId == "string"
+    tSIN = typeof result.timestamp == "number"
+    sIS = typeof result.signature == "string"
+
+    if sNIE and tSE and sE and sNIIS and tSIN and sIS then return result
+    ###
+    {
+        "publicKey": "...",
+        "timestamp": "...",
+        "signature": "..."
+    }
+    ###
+    throw new Error("Service returned wrong signedNodeId Object format.")
+
+############################################################
+export createAuthCode = (publicKey, timestamp, signature, nonce) ->
+    authCode = await service.generateAuthCodeFor(publicKey)
+    if typeof authCode == "string" then return {authCode}
+    ###   
+    {
+        "authCode": "..."
+    }
+    ###
+    throw new Error("Service returned wrong authCode type.")
+
+
+
 
 ############################################################
 export openSecretSpace = (authCode, publicKey, closureDate, timestamp, signature, nonce) ->
@@ -128,38 +161,7 @@ export deleteNotificationHook = (publicKey, notificationHookId, timestamp, signa
 
 
 ############################################################
-export createAuthCode = (publicKey, timestamp, signature, nonce) ->
-    authCode = await service.generateAuthCodeFor(publicKey)
-    if typeof authCode == "string" then return {authCode}
-    ###   
-    {
-        "authCode": "..."
-    }
-    ###
-    throw new Error("Service returned wrong authCode type.")
-
-############################################################
 export setRequestableServer = (authCode, serverURL, serverNodeId) ->
     await service.setRequestableServer(serverURL, serverNodeId)
     return {ok: true}
-
-############################################################
-export getNodeId = (authCode) ->
-    result = await service.getSignedNodeId()    
-    pKE = result.publicKey?
-    tSE = result.timestamp?
-    sE = result.signature?
-    pKEIS = typeof result.publicKey == "string"
-    tSEIS = typeof result.timestamp == "string"
-    sEIS = typeof result.signature == "string"
-    if pKE and tSE and sE and pKEIS and tSEIS and sEIS then return result
-    ###
-    {
-        "publicKey": "...",
-        "timestamp": "...",
-        "signature": "..."
-    }
-    ###
-    throw new Error("Service returned wrong signedNodeId Object format.")
-
 

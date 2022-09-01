@@ -1,6 +1,24 @@
 ############################################################
 import * as h from "./secretmanagementhandlers"
 
+
+############################################################
+export getNodeId = (req, res) ->
+    try
+        response = await h.getNodeId(req.body.authCode)
+        res.send(response)
+    catch err then res.send({error: err.stack})
+    return
+
+############################################################
+export createAuthCode = (req, res) ->
+    try
+        response = await h.createAuthCode(req.body.publicKey, req.body.timestamp, req.body.signature, req.body.nonce)
+        res.send(response)
+    catch err then res.send({error: err.stack})
+    return
+
+
 ############################################################
 export openSecretSpace = (req, res) ->
     try
@@ -127,25 +145,9 @@ export deleteNotificationHook = (req, res) ->
 
 
 ############################################################
-export createAuthCode = (req, res) ->
-    try
-        response = await h.createAuthCode(req.body.publicKey, req.body.timestamp, req.body.signature, req.body.nonce)
-        res.send(response)
-    catch err then res.send({error: err.stack})
-    return
-
-############################################################
 export setRequestableServer = (req, res) ->
     try
         response = await h.setRequestableServer(req.body.authCode, req.body.serverURL, req.body.serverNodeId)
-        res.send(response)
-    catch err then res.send({error: err.stack})
-    return
-
-############################################################
-export getNodeId = (req, res) ->
-    try
-        response = await h.getNodeId(req.body.authCode)
         res.send(response)
     catch err then res.send({error: err.stack})
     return
