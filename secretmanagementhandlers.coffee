@@ -113,7 +113,7 @@ export getSubSpace = (publicKey, fromId, timestamp, signature, nonce) ->
 
 ############################################################
 export deleteSubSpace = (publicKey, fromId, timestamp, signature, nonce) ->
-    await service.removeSubSpaceFor(publicKey, fromId)
+    await service.deleteSubSpaceFor(publicKey, fromId)
     return {ok:true}
 
 
