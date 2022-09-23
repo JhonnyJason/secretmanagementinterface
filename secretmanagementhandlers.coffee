@@ -1,167 +1,180 @@
 ############################################################
+import {
+    NUMBER,STRING,STRINGHEX,STRINGHEX64,assertStructureAndTypes
+} from "./checkStructureAndTypes.js"
+
+############################################################
 service = null
 export setService = (serviceToSet) -> service = serviceToSet
 
 ############################################################
-export getNodeId = (authCode) ->
-    result = await service.getSignedNodeId(authCode)    
-    sNIE = result.serverNodeId?
-    tSE = result.timestamp?
-    sE = result.signature?
-    sNIIS = typeof result.serverNodeId == "string"
-    tSIN = typeof result.timestamp == "number"
-    sIS = typeof result.signature == "string"
-
-    if sNIE and tSE and sE and sNIIS and tSIN and sIS then return result
-    ###
-    {
-        "publicKey": "...",
-        "timestamp": "...",
-        "signature": "..."
-    }
-    ###
-    throw new Error("Service returned wrong signedNodeId Object format.")
+ok = true
 
 ############################################################
-export createAuthCode = (publicKey, timestamp, signature, nonce) ->
-    authCode = await service.generateAuthCodeFor(publicKey)
-    if typeof authCode == "string" then return {authCode}
-    ###   
-    {
-        "authCode": "..."
-    }
-    ###
-    throw new Error("Service returned wrong authCode type.")
-
-
-
+SecretObjectFormat = {
+    referencePoint: STRINGHEX64
+    encryptedContent: STRINGHEX
+}
 
 ############################################################
-export openSecretSpace = (authCode, publicKey, closureDate, timestamp, signature, nonce) ->
-    await service.openSecretSpace(authCode, publicKey, closureDate)
-    return {ok:true}
+#region Basic
 
 ############################################################
-export getSecretSpace = (publicKey, timestamp, signature, nonce) ->
-    secretObj = await service.getSecretSpace(publicKey)
-    rE = secretObj.referencePointHex?
-    eCE = secretObj.encryptedContentHex?
-    rIS = typeof secretObj.referencePointHex == "string"
-    eCIS = typeof secretObj.encryptedContentHex == "string"
-    if rE and eCE and rIS and eCIS then return secretObj
-    ###   
-    {
-        "referencePointHex": "...",
-        "encryptedContentHex": "..."
-    }
-    ###
-    throw new Error("Service returned wrong secret object format.")
+getNodeIdResponse = {
+    serverNodeId: STRINGHEX64
+    timestamp: NUMBER
+    signature: STRINGHEX128
+}
+############################################################
+export getNodeId = (req) ->
+    response = await service.getSignedNodeId(req)
+    try assertStructureAndTypes(response, getNodeIdResponse)
+    catch err then throw new Error("Error: service.getSignedNodeId - response format: #{err.message}")
+    return response
 
 ############################################################
-export deleteSecretSpace = (publicKey, timestamp, signature, nonce) ->
-    await service.deleteSecretSpace(publicKey)
-    return {ok:true}
+export createAuthCode = (req) ->
+    await service.generateAuthCodeFor(req)
+    return {ok}
+
+#endregion
 
 
 ############################################################
-export setSecret = (publicKey, secretId, secret, timestamp, signature, nonce) ->
-    await service.setSecret(publicKey, secretId, secret)
-    return {ok:true}
+#region Secret Spaces
 
 ############################################################
-export getSecret = (publicKey, secretId, timestamp, signature, nonce) ->
-    secretObj = await service.getSecret(publicKey, secretId)
-    rE = secretObj.referencePointHex?
-    eCE = secretObj.encryptedContentHex?
-    rIS = typeof secretObj.referencePointHex == "string"
-    eCIS = typeof secretObj.encryptedContentHex == "string"
-    if rE and eCE and rIS and eCIS then return secretObj
-    ###   
-    {
-        "referencePointHex": "...",
-        "encryptedContentHex": "..."
-    }
-    ###
-    throw new Error("Service returned wrong secret object format.")
+getSecretSpaceResponse = SecretObjectFormat 
+
+############################################################
+export openSecretSpace = (req) ->
+    await service.openSecretSpace(req)
+    return {ok}
+
+############################################################
+export getSecretSpace = (req) ->
+    response = await service.getSecretSpace(req)
+    try assertStructureAndTypes(response, getSecretSpaceResponse)
+    catch err then throw new Error("Error: service.getSecretSpace - response format: #{err.message}")
+    return response
+
+############################################################
+export deleteSecretSpace = (req) ->
+    await service.deleteSecretSpace(req)
+    return {ok}
+
+#endregion
+
+
+############################################################
+#region Secrets
+
+############################################################
+getSecretResponse = SecretObjectFormat
+
+############################################################
+export setSecret = (req) ->
+    await service.setSecret(req)
+    return {ok}
+
+############################################################
+export getSecret = (req) ->
+    response = await service.getSecret(req)
+    try assertStructureAndTypes(response, getSecretResponse)
+    catch err then throw new Error("Error: service.getSecret - response format: #{err.message}")
+    return response
     
 ############################################################
-export deleteSecret = (publicKey, secretId, timestamp, signature, nonce) ->
-    await service.deleteSecret(publicKey, secretId)
-    return {ok:true}
+export deleteSecret = (req) ->
+    await service.deleteSecret(req)
+    return {ok}
+
+#endregion
 
 
 ############################################################
-export openSubSpace = (publicKey, fromId, closureDate, timestamp, signature, nonce) ->
-    await service.createSubSpaceFor(publicKey, fromId, closureDate)
-    return {ok:true}
+#region Sub Spaces
 
 ############################################################
-export getSubSpace = (publicKey, fromId, timestamp, signature, nonce) ->
-    secretObj = await service.getSubSpace(publicKey, fromId)
-    rE = secretObj.referencePointHex?
-    eCE = secretObj.encryptedContentHex?
-    rIS = typeof secretObj.referencePointHex == "string"
-    eCIS = typeof secretObj.encryptedContentHex == "string"
-    if rE and eCE and rIS and eCIS then return secretObj
-    ###   
-    {
-        "referencePointHex": "...",
-        "encryptedContentHex": "..."
-    }
-    ###
-    throw new Error("Service returned wrong secret object format.")
+getSubSpaceResponse = SecretObjectFormat
 
 ############################################################
-export deleteSubSpace = (publicKey, fromId, timestamp, signature, nonce) ->
-    await service.deleteSubSpaceFor(publicKey, fromId)
-    return {ok:true}
+export openSubSpace = (req) ->
+    await service.createSubSpaceFor(req)
+    return {ok}
+
+############################################################
+export getSubSpace = (req) ->
+    response = await service.getSubSpace(req)
+    try assertStructureAndTypes(response, getSubSpaceResponse)
+    catch err then throw new Error("Error: service.getSubSpace - response format: #{err.message}")
+    return response
+
+############################################################
+export deleteSubSpace = (req) ->
+    await service.deleteSubSpaceFor(req)
+    return {ok}
+
+#endregion
 
 
 ############################################################
-export shareSecretTo = (publicKey, shareToId, secretId, secret, oneTimeSecret, timestamp, signature, nonce) ->
-    await service.shareSecretTo(publicKey, shareToId, secretId, secret, oneTimeSecret)
-    return {ok:true}
+#region Shared Secrets
 
 ############################################################
-export getSecretFrom = (publicKey, fromId, secretId, timestamp, signature, nonce) ->
-    secretObj = await service.getSecretFrom(publicKey, fromId, secretId)
-    rE = secretObj.referencePointHex?
-    eCE = secretObj.encryptedContentHex?
-    rIS = typeof secretObj.referencePointHex == "string"
-    eCIS = typeof secretObj.encryptedContentHex == "string"
-    if rE and eCE and rIS and eCIS then return secretObj
-    ###   
-    {
-        "referencePointHex": "...",
-        "encryptedContentHex": "..."
-    }
-    ###
-    throw new Error("Service returned wrong secret object format.")
+getSecretFromResponse = SecretObjectFormat
+
+############################################################
+export shareSecretTo = (req) ->
+    await service.shareSecretTo(req)
+    return {ok}
+
+############################################################
+export getSecretFrom = (req) ->
+    response = await service.getSecretFrom(req)
+    try assertStructureAndTypes(response, getSecretFromResponse)
+    catch err then throw new Error("Error: service.getSecretFrom - response format: #{err.message}")
+    return response
     
 ############################################################
-export deleteSharedSecret = (publicKey, sharedToId, secretId, timestamp, signature, nonce) ->
-    service.deleteSharedSecret(sharedToId, publicKey, secretId)
-    return {ok:true}
+export deleteSharedSecret = (req) ->
+    service.deleteSharedSecret(req)
+    return {ok}
+
+#endregion
 
 
 ############################################################
-export addNotificationHook = (publicKey, type, targetId, notifyURL, timestamp, signature, nonce) ->
-    notificationHookId = await service.addNotificationHook(publicKey, type, targetId, notifyURL)
-    if typeof notificationHookId != "string" then throw new Error("Service did not return a string for the notificationHookId.")
-    return {notificationHookId}
-
-export getNotificationHooks = (publicKey, targetId, timestamp, signature, nonce) ->
-    notificationHooks = await service.getNotificationHooks(publicKey, targetId)
-    if !Array.isArray(notificationHooks) then throw new Error("Service did not return an Array for the notificationHooks.")
-    return {notificationHooks}
-
-export deleteNotificationHook = (publicKey, notificationHookId, timestamp, signature, nonce) ->
-    await service.deleteNotificationHook(publicKey, notificationHookId)
-    return {ok: true}
-
+#region Notifications
 
 ############################################################
-export setRequestableServer = (authCode, serverURL, serverNodeId) ->
-    await service.setRequestableServer(serverURL, serverNodeId)
-    return {ok: true}
+addNotificationHookResponse = {
+    id: STRINGHEX32,
+    type: STRING,
+    url: STRING,
+    error: STRING
+}
 
+############################################################
+getNotificationHookResponse = {
+    notificationHooks: ARRAY
+}
+
+############################################################
+export addNotificationHook = (req) ->
+    response = await service.addNotificationHook(req)
+    try assertStructureAndTypes(response, addNotificationHookResponse)
+    catch err then throw new Error("Error: service.addNotificationHook - response format: #{err.message}")
+    return response
+
+export getNotificationHooks = (req) ->
+    response = await service.getNotificationHooks(req)
+    try assertStructureAndTypes(response, getNotificationHookResponse)
+    catch err then throw new Error("Error: service.getNotificationHooks - response format: #{err.message}")
+    return response
+    
+export deleteNotificationHook = (req) ->
+    await service.deleteNotificationHook(req)
+    return {ok}
+
+#endregion
