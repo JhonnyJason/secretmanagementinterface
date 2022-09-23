@@ -1,6 +1,7 @@
 ############################################################
 import {
-    NUMBER,STRING,STRINGHEX,STRINGHEX64,assertStructureAndTypes
+    NUMBER, STRING, STRINGHEX, STRINGHEX32, STRINGHEX64,
+    STRINGHEX128, BOOLEAN, ARRAY, assertStructureAndTypes
 } from "./checkStructureAndTypes.js"
 
 ############################################################

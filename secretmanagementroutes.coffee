@@ -2,7 +2,8 @@
 import * as h from "./secretmanagementhandlers"
 ############################################################
 import {
-    NUMBER,STRING,STRINGHEX,STRINGHEX64,assertStructureAndTypes
+    NUMBER, STRING, STRINGHEX, STRINGHEX32, STRINGHEX64,
+    STRINGHEX128, BOOLEAN, ARRAY, assertStructureAndTypes
 } from "./checkStructureAndTypes.js"
 
 ############################################################
@@ -29,7 +30,7 @@ export getNodeId = (req, res) ->
     try assertStructureAndTypes(req.body, getNodeIdArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.getNodeId(req)
@@ -42,7 +43,7 @@ export createAuthCode = (req, res) ->
     try assertStructureAndTypes(req.body, createAuthCodeArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.createAuthCode(req)
@@ -86,7 +87,7 @@ export openSecretSpace = (req, res) ->
     try assertStructureAndTypes(req.body, openSecretSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.openSecretSpace(req)
@@ -99,7 +100,7 @@ export getSecretSpace = (req, res) ->
     try assertStructureAndTypes(req.body, getSecretSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.getSecretSpace(req)
@@ -112,7 +113,7 @@ export deleteSecretSpace = (req, res) ->
     try assertStructureAndTypes(req.body, deleteSecretSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.deleteSecretSpace(req)
@@ -157,7 +158,7 @@ export setSecret = (req, res) ->
     try assertStructureAndTypes(req.body, setSecretArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.setSecret(req)
@@ -170,7 +171,7 @@ export getSecret = (req, res) ->
     try assertStructureAndTypes(req.body, getSecretArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.getSecret(req)
@@ -183,7 +184,7 @@ export deleteSecret = (req, res) ->
     try assertStructureAndTypes(req.body, deleteSecretArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.deleteSecret(req)
@@ -228,7 +229,7 @@ export openSubSpace = (req, res) ->
     try assertStructureAndTypes(req.body, openSubSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.openSubSpace(req)
@@ -241,7 +242,7 @@ export getSubSpace = (req, res) ->
     try assertStructureAndTypes(req.body, getSubSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.getSubSpace(req)
@@ -254,7 +255,7 @@ export deleteSubSpace = (req, res) ->
     try assertStructureAndTypes(req.body, deleteSubSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.deleteSubSpace(req)
@@ -304,7 +305,7 @@ export shareSecretTo = (req, res) ->
     try assertStructureAndTypes(req.body, shareSecretToArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.shareSecretTo(req)
@@ -317,7 +318,7 @@ export getSecretFrom = (req, res) ->
     try assertStructureAndTypes(req.body, getSecretFromArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.getSecretFrom(req)
@@ -330,7 +331,7 @@ export deleteSharedSecret = (req, res) ->
     try assertStructureAndTypes(req.body, deleteSharedSecretArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.deleteSharedSecret(req)
@@ -376,7 +377,7 @@ export addNotificationHook = (req, res) ->
     try assertStructureAndTypes(req.body, addNotificationHookArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.addNotificationHook(req)
@@ -389,7 +390,7 @@ export getNotificationHooks = (req, res) ->
     try assertStructureAndTypes(req.body, getNotificationHooksArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.getNotificationHooks(req)
@@ -402,7 +403,7 @@ export deleteNotificationHook = (req, res) ->
     try assertStructureAndTypes(req.body, deleteNotificationHookArguments)
     catch err then return res.status(400).send({error: err.message})
 
-    try authenticateRequest(req)
+    try await authenticateRequest(req)
     catch err then return res.status(401).send({error: err.message})
 
     try response = await h.deleteNotificationHook(req)
