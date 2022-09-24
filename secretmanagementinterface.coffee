@@ -8,7 +8,7 @@ export getNodeId = (sciURL, authCode) ->
     return postData(requestURL, requestObject)
 
 export createAuthCode = (sciURL, publicKey, action, timestamp, signature, nonce) ->
-    requestObject = { publicKey, timestamp, action, signature, nonce }
+    requestObject = { publicKey, action, timestamp, signature, nonce }
     requestURL = sciURL+"/createAuthCode"
     return postData(requestURL, requestObject)
 
@@ -71,8 +71,8 @@ export getSecretFrom = (sciURL, publicKey, fromId, secretId, timestamp, signatur
     requestURL = sciURL+"/getSecretFrom"
     return postData(requestURL, requestObject)
 
-export shareSecretTo = (sciURL, publicKey, shareToId, secretId, secret, oneTimeSecret, timestamp, signature, nonce) ->
-    requestObject = { publicKey, shareToId, secretId, secret, oneTimeSecret, timestamp, signature, nonce }
+export shareSecretTo = (sciURL, publicKey, shareToId, secretId, secret, isOneTimeSecret, timestamp, signature, nonce) ->
+    requestObject = { publicKey, shareToId, secretId, secret, isOneTimeSecret, timestamp, signature, nonce }
     requestURL = sciURL+"/shareSecretTo"
     return postData(requestURL, requestObject)
 
@@ -98,11 +98,5 @@ export deleteNotificationHook = (sciURL, publicKey, notificationHookId , timesta
     requestURL = sciURL+"/deleteNotificationHook"
     return postData(requestURL, requestObject)
 
-
-############################################################
-export setRequestableServer = (sciURL, authCode, serverURL, serverNodeId) ->
-    requestObject = { authCode, serverURL, serverNodeId }
-    requestURL = sciURL+"/setRequestableServer"
-    return postData(requestURL, requestObject)
 
 ##TODO requestable Server stuff
