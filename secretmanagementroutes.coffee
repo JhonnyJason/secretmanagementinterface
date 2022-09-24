@@ -3,7 +3,8 @@ import * as h from "./secretmanagementhandlers"
 ############################################################
 import {
     NUMBER, STRING, STRINGHEX, STRINGHEX32, STRINGHEX64,
-    STRINGHEX128, BOOLEAN, ARRAY, assertStructureAndTypes
+    STRINGHEX128, BOOLEAN, ARRAY, assertStructureAndTypes,
+    NUMBERORNULL
 } from "./checkStructureAndTypes.js"
 
 ############################################################
@@ -20,6 +21,7 @@ getNodeIdArguments = {
 ############################################################
 createAuthCodeArguments = {
     publicKey: STRINGHEX64
+    action: STRING
     timestamp: NUMBER
     signature: STRINGHEX128
     nonce: NUMBER
@@ -62,7 +64,7 @@ export createAuthCode = (req, res) ->
 openSecretSpaceArguments = {
     authCode: STRINGHEX64
     publicKey: STRINGHEX64
-    closureDate: NUMBER
+    closureDate: NUMBERORNULL
     timestamp: NUMBER
     signature: STRINGHEX128
     nonce: NUMBER
@@ -202,7 +204,7 @@ export deleteSecret = (req, res) ->
 openSubSpaceArguments = {
     publicKey: STRINGHEX64
     fromId: STRINGHEX64
-    closureDate: NUMBER
+    closureDate: NUMBERORNULL
     timestamp: NUMBER
     signature: STRINGHEX128
     nonce: NUMBER
@@ -366,7 +368,7 @@ getNotificationHooksArguments = {
 ############################################################
 deleteNotificationHookArguments = {
     publicKey: STRINGHEX64
-    notificationHookId: STRINGHEX
+    notificationHookId: STRINGHEX32
     timestamp: NUMBER
     signature: STRINGHEX128
     nonce: NUMBER

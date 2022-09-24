@@ -8,9 +8,11 @@ export STRINGHEX64 = 4
 export STRINGHEX128 = 5
 export BOOLEAN = 6
 export ARRAY = 7
+export NUMBERORNULL = 8
+export STRINGORUNDEFINED = 9
 
 ############################################################
-assertionFunctions = new Array(8)
+assertionFunctions = new Array(10)
 
 ############################################################
 #region hexHelpers
@@ -61,6 +63,16 @@ assertionFunctions[ARRAY] = (arg) ->
     if !Array.isArray(arg) then throw new Error("Not an array!")
     return
 
+assertionFunctions[NUMBERORNULL] = (arg) ->
+    if arg == null then return
+    if typeof arg != "number" then throw new Error("Neither a number nor null!")
+    return
+
+assertionFunctions[STRINGORUNDEFINED] = (arg) ->
+    if typeof arg == "undefined" then return
+    if typeof arg != "string" then throw new Error("Neither a number nor undefined!")
+    return
+
 #endregion
 
 ############################################################
@@ -68,10 +80,10 @@ export assertStructureAndTypes = (body, argumentTypes) ->
     bodyKeys = Object.keys(body)
     argKeys = Object.keys(argumentTypes)
     
-    if bodyKeys.length != argKeys.length then throw new Error("Error: The Number of parameters in the body, did not match the expected number.")
+    if bodyKeys.length != argKeys.length then throw new Error("Error: The Number of parameters in the body, did not match the expected number. #{argKeys.length} vs #{bodyKeys.length}")
     
     for key,i in bodyKeys
-        if key != argKeys[i] then throw new Error("Error: parameter @ index: #{i} did go by the expected key of #{argKeys[i]} - the detected key was: #{key}!")
+        if key != argKeys[i] then throw new Error("Error: parameter @ index: #{i} had wrong key! expected: '#{argKeys[i]}'  detected: '#{key}'")
 
     for label,arg of body
         type = argumentTypes[label]

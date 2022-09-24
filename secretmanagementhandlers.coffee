@@ -1,7 +1,8 @@
 ############################################################
 import {
     NUMBER, STRING, STRINGHEX, STRINGHEX32, STRINGHEX64,
-    STRINGHEX128, BOOLEAN, ARRAY, assertStructureAndTypes
+    STRINGHEX128, BOOLEAN, ARRAY, assertStructureAndTypes,
+    NUMBERORNULL,STRINGORUNDEFINED
 } from "./checkStructureAndTypes.js"
 
 ############################################################
@@ -13,8 +14,8 @@ ok = true
 
 ############################################################
 SecretObjectFormat = {
-    referencePoint: STRINGHEX64
-    encryptedContent: STRINGHEX
+    referencePointHex: STRINGHEX64
+    encryptedContentHex: STRINGHEX
 }
 
 ############################################################
@@ -153,7 +154,7 @@ addNotificationHookResponse = {
     id: STRINGHEX32,
     type: STRING,
     url: STRING,
-    error: STRING
+    error: STRINGORUNDEFINED
 }
 
 ############################################################
