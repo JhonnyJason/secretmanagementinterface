@@ -9,7 +9,7 @@ export STRINGHEX128 = 5
 export BOOLEAN = 6
 export ARRAY = 7
 export NUMBERORNULL = 8
-export STRINGORUNDEFINED = 9
+export STRINGORNULL = 9
 
 ############################################################
 assertionFunctions = new Array(10)
@@ -68,9 +68,9 @@ assertionFunctions[NUMBERORNULL] = (arg) ->
     if typeof arg != "number" then throw new Error("Neither a number nor null!")
     return
 
-assertionFunctions[STRINGORUNDEFINED] = (arg) ->
-    if typeof arg == "undefined" then return
-    if typeof arg != "string" then throw new Error("Neither a number nor undefined!")
+assertionFunctions[STRINGORNULL] = (arg) ->
+    if arg == null then return
+    if typeof arg != "string" then throw new Error("Neither a number nor null!")
     return
 
 #endregion
