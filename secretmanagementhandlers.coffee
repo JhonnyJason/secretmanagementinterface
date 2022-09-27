@@ -2,7 +2,7 @@
 import {
     NUMBER, STRING, STRINGHEX, STRINGHEX32, STRINGHEX64,
     STRINGHEX128, BOOLEAN, ARRAY, assertStructureAndTypes,
-    NUMBERORNULL,STRINGORNULL
+    NUMBERORNULL,OBJECT
 } from "./checkStructureAndTypes.js"
 
 ############################################################
@@ -154,7 +154,7 @@ addNotificationHookResponse = {
     id: STRINGHEX32,
     type: STRING,
     url: STRING,
-    error: STRINGORNULL
+    lastNotification: OBJECT
 }
 
 ############################################################
