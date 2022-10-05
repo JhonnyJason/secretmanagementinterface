@@ -1,5 +1,7 @@
 ############################################################
 import * as h from "./secretmanagementhandlers"
+import { performance } from "node:perf_hooks"
+
 ############################################################
 import {
     NUMBER, STRING, STRINGHEX, STRINGHEX32, STRINGHEX64,
@@ -29,6 +31,8 @@ createAuthCodeArguments = {
 
 ############################################################
 export getNodeId = (req, res) ->
+    start = performance.now()
+
     try assertStructureAndTypes(req.body, getNodeIdArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -38,10 +42,16 @@ export getNodeId = (req, res) ->
     try response = await h.getNodeId(req)
     catch err then return res.send({error: err.message})
     
+    end = performance.now()
+    diffMS = end - start
+    console.log("/getNodeId took #{diffMS}ms")
+
     return res.send(response)
 
 ############################################################
 export createAuthCode = (req, res) ->
+    start = performance.now()
+    
     try assertStructureAndTypes(req.body, createAuthCodeArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -50,6 +60,10 @@ export createAuthCode = (req, res) ->
 
     try response = await h.createAuthCode(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/createAuthCode took #{diffMS}ms")
     
     return res.send(response)
 
@@ -86,6 +100,8 @@ deleteSecretSpaceArguments = {
 
 ############################################################
 export openSecretSpace = (req, res) ->
+    start = performance.now()
+    
     try assertStructureAndTypes(req.body, openSecretSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -94,11 +110,17 @@ export openSecretSpace = (req, res) ->
 
     try response = await h.openSecretSpace(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/openSecretSpace took #{diffMS}ms")
     
     return res.send(response)
 
 ############################################################
 export getSecretSpace = (req, res) ->
+    start = performance.now()
+    
     try assertStructureAndTypes(req.body, getSecretSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -107,11 +129,17 @@ export getSecretSpace = (req, res) ->
 
     try response = await h.getSecretSpace(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/getSecretSpace took #{diffMS}ms")
     
     return res.send(response)
 
 ############################################################
 export deleteSecretSpace = (req, res) ->
+    start = performance.now()
+
     try assertStructureAndTypes(req.body, deleteSecretSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -120,6 +148,10 @@ export deleteSecretSpace = (req, res) ->
 
     try response = await h.deleteSecretSpace(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/deleteSecretSpace took #{diffMS}ms")
     
     return res.send(response)
 
@@ -157,6 +189,8 @@ deleteSecretArguments = {
 
 ############################################################
 export setSecret = (req, res) ->
+    start = performance.now()
+
     try assertStructureAndTypes(req.body, setSecretArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -166,10 +200,16 @@ export setSecret = (req, res) ->
     try response = await h.setSecret(req)
     catch err then return res.send({error: err.message})
 
+    end = performance.now()
+    diffMS = end - start
+    console.log("/setSecret took #{diffMS}ms")
+
     return res.send(response)
 
 ############################################################
 export getSecret = (req, res) ->
+    start = performance.now()
+
     try assertStructureAndTypes(req.body, getSecretArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -178,11 +218,17 @@ export getSecret = (req, res) ->
 
     try response = await h.getSecret(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/getSecret took #{diffMS}ms")
     
     return res.send(response)
 
 ############################################################
 export deleteSecret = (req, res) ->
+    start = performance.now()
+
     try assertStructureAndTypes(req.body, deleteSecretArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -191,6 +237,10 @@ export deleteSecret = (req, res) ->
 
     try response = await h.deleteSecret(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/deleteSecret took #{diffMS}ms")
     
     return res.send(response)
 
@@ -228,6 +278,8 @@ deleteSubSpaceArguments = {
 
 ############################################################
 export openSubSpace = (req, res) ->
+    start = performance.now()
+
     try assertStructureAndTypes(req.body, openSubSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -236,11 +288,17 @@ export openSubSpace = (req, res) ->
 
     try response = await h.openSubSpace(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/openSubSpace took #{diffMS}ms")
     
     return res.send(response)
 
 ############################################################
 export getSubSpace = (req, res) ->
+    start = performance.now()
+    
     try assertStructureAndTypes(req.body, getSubSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -249,11 +307,17 @@ export getSubSpace = (req, res) ->
 
     try response = await h.getSubSpace(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/getSubSpace took #{diffMS}ms")
     
     return res.send(response)
 
 ############################################################
 export deleteSubSpace = (req, res) ->
+    start = performance.now()
+    
     try assertStructureAndTypes(req.body, deleteSubSpaceArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -262,6 +326,10 @@ export deleteSubSpace = (req, res) ->
 
     try response = await h.deleteSubSpace(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/deleteSubSpace took #{diffMS}ms")
     
     return res.send(response)
     
@@ -304,6 +372,8 @@ deleteSharedSecretArguments = {
 
 ############################################################
 export shareSecretTo = (req, res) ->
+    start = performance.now()
+    
     try assertStructureAndTypes(req.body, shareSecretToArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -312,11 +382,17 @@ export shareSecretTo = (req, res) ->
 
     try response = await h.shareSecretTo(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/shareSecretTo took #{diffMS}ms")
     
     return res.send(response)
 
 ############################################################
 export getSecretFrom = (req, res) ->
+    start = performance.now()
+    
     try assertStructureAndTypes(req.body, getSecretFromArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -325,11 +401,17 @@ export getSecretFrom = (req, res) ->
 
     try response = await h.getSecretFrom(req)
     catch err then return res.send({error: err.message})
-    
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/getSecretFrom took #{diffMS}ms")
+   
     return res.send(response)
 
 ############################################################
 export deleteSharedSecret = (req, res) ->
+    start = performance.now()
+
     try assertStructureAndTypes(req.body, deleteSharedSecretArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -338,6 +420,10 @@ export deleteSharedSecret = (req, res) ->
 
     try response = await h.deleteSharedSecret(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/deleteSharedSecret took #{diffMS}ms")
     
     return res.send(response)
 
@@ -376,6 +462,8 @@ deleteNotificationHookArguments = {
 
 ############################################################
 export addNotificationHook = (req, res) ->
+    start = performance.now()
+
     try assertStructureAndTypes(req.body, addNotificationHookArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -385,10 +473,16 @@ export addNotificationHook = (req, res) ->
     try response = await h.addNotificationHook(req)
     catch err then return res.send({error: err.message})
 
+    end = performance.now()
+    diffMS = end - start
+    console.log("/addNotificationHook took #{diffMS}ms")
+
     return res.send(response)
 
 ############################################################
 export getNotificationHooks = (req, res) ->
+    start = performance.now()
+
     try assertStructureAndTypes(req.body, getNotificationHooksArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -397,11 +491,16 @@ export getNotificationHooks = (req, res) ->
 
     try response = await h.getNotificationHooks(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/getNotificationHooks took #{diffMS}ms")
     
     return res.send(response)
 
 ############################################################
 export deleteNotificationHook = (req, res) ->
+    start = performance.now()
     try assertStructureAndTypes(req.body, deleteNotificationHookArguments)
     catch err then return res.status(400).send({error: err.message})
 
@@ -410,6 +509,10 @@ export deleteNotificationHook = (req, res) ->
 
     try response = await h.deleteNotificationHook(req)
     catch err then return res.send({error: err.message})
+
+    end = performance.now()
+    diffMS = end - start
+    console.log("/deleteNotificationHook took #{diffMS}ms")
     
     return res.send(response)
 
